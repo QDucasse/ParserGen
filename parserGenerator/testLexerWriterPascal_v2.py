@@ -9,7 +9,7 @@ from prettyprinter import PrettyPrinter
 
 if __name__ == '__main__':
     # Generates the pascal results
-    testFileName = '../grammars/pascal_grammar.ebnf'
+    testFileName = 'grammars/pascal_grammar.ebnf'
 
     try:
       with open(testFileName, 'r') as testFile:
@@ -25,9 +25,9 @@ if __name__ == '__main__':
     parser = Parser(verbose)
     grammar = parser.parse(tokens)
 
-    writer = LexerWriter("../results/Pascal/PascalLexer_fromJinja.py")
+    writer = LexerWriter("results/Pascal/PascalLexer_fromJinja.py")
     writer.visit(grammar)
     writer.write(writer.lexemList)
 
-    pp = PrettyPrinter("../results/Pascal/pascal_grammar_pp.ebnf")
+    pp = PrettyPrinter("results/Pascal/pascal_grammar_pp.ebnf")
     pp.visit(grammar)

@@ -9,7 +9,7 @@ from parserWriter import ParserWriter
 from prettyprinter import PrettyPrinter
 
 if __name__ == '__main__':
-    # Generates the java results
+    # Generates the ebnf results
     testFileName = 'grammars/MiniJava_grammar.ebnf'
 
     try:
