@@ -4,10 +4,15 @@ from lexemDictionary import LexemDictionary
 from jinja2 import Environment, FileSystemLoader
 
 class ParserWriter(Visitor):
+    '''
+    Parser writer creating a parser from a program ast
+    --> inherits from Visitor
+    each specific call to the visits calls the jinja rendering
+    '''
     def __init__(self,lexer,name="results/parserWriter/parserWriter_output.py"):
         self.lexer=lexer
         self.saving_file=open(name,"w")
-        file_loader = FileSystemLoader('templates/parser')#On se place dans le bon dossier 
+        file_loader = FileSystemLoader('templates/parser')#On se place dans le bon dossier
         self.env = Environment(loader=file_loader,extensions=['jinja2.ext.loopcontrols', 'jinja2.ext.do'])
         self.template = self.env.get_template('body.py')#On ouvre le template
         self.output = self.template.render()#On remplace les champs du template
@@ -23,7 +28,7 @@ class ParserWriter(Visitor):
         self.template = self.env.get_template('parseMethod.py')
         self.output=self.template.render(main=self.first)
         self.saving_file.write(self.output)
-        
+
     def visitSyntaxRule(self,syntaxRule):
         # Visits identifier
         id   = syntaxRule.identifier
@@ -80,10 +85,10 @@ class ParserWriter(Visitor):
 
     def visitTerminalStringSQuote(self,terminalStringSQuote):
         self.to_generate.append((terminalStringSQuote.value,1))#1=Expected , 0=For Parsing
-    
+
     def visitTerminalStringDQuote(self,terminalStringDQuote):
         self.visitTerminalStringSQuote(terminalStringDQuote)
-        
+
     def visitPrimary(self,primary):
         if primary.optionalSeq != None:
             self.to_generate.append("opt-begin")
@@ -107,9 +112,7 @@ class ParserWriter(Visitor):
             primary.terminalString.accept(self,primary.terminalString)
         elif primary.empty != None:
             primary.empty.accept(self,primary.empty)
-            
+
     def visitIdentifier(self,identifier):
         if (self.first==None): self.first=identifier.value.capitalize()
         self.to_generate.append((identifier.value.capitalize(),0))
-
-

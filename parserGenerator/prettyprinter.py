@@ -3,6 +3,10 @@ from visitor import Visitor
 from file import File
 
 class PrettyPrinter(Visitor):
+    '''
+    Pretty printer rendering the ebnf again from the ast
+    Allows checking again if everything went right
+    '''
     def __init__(self,name="results/prettyPrinter/prettyprinter_output.ebnf"):
         lexemDictionary = LexemDictionary()
         self.file=File(name)

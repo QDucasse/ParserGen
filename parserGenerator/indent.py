@@ -1,5 +1,7 @@
 class Indent:
-
+    '''
+    An indentator simplifying information display with automated tabulations
+    '''
     INDENT = 2
 
     def __init__(self, verbose=False):

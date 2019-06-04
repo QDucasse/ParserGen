@@ -3,7 +3,11 @@ import sys
 
 
 class LexemDictionary():
-
+    '''
+    The first version of our lexem dictionary. Deprecated due to the
+    tags of the token being not useful enough
+    SEE lexemDictionary_v2
+    '''
     regexExpressions = [
         # White space
         # (r'[\t]+', None),
@@ -55,6 +59,9 @@ class LexemDictionary():
     ]
 
     def associateExpression(self,expression):
+        '''
+        
+        '''
         match = None
         for tokenTuple in lexemDictionary:
             pattern, tag = tokenTuple

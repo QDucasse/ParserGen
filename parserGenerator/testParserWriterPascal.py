@@ -9,6 +9,7 @@ from parserWriter import ParserWriter
 from prettyprinter import PrettyPrinter
 
 if __name__ == '__main__':
+    # Generates the Pascal results
     testFileName = 'grammars/pascal_grammar.ebnf'
 
     try:
@@ -28,7 +29,7 @@ if __name__ == '__main__':
     writer = LexerWriter("results/Pascal/PascalLexer_fromJinja.py")
     writer.visit(grammar)
     writer.write(writer.lexemList)
-    
+
     writerParser = ParserWriter(writer.lexemList,"results/Pascal/PascalParser_fromJinja.py")
     writerParser.visit(grammar)
 

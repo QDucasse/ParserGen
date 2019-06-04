@@ -34,13 +34,25 @@ regexExpressions = [
 
 
 class Lexer:
+    '''
+    Main EBNF lexer:
+    Creates lexem from raw program text
+    '''
 
     def __init__(self):
         self.tokens = []
 
     # inputText = open("testFile.c").readlines()
     def lex(self, inputText):
-
+        '''
+        Main lexer function:
+        Creates tokens for every detected regular expression
+        The token are composed of:
+            - tag
+            - values
+            - position
+        SEE token1 for more info
+        '''
         lineNumber = 0
         for line in inputText:
             lineNumber += 1

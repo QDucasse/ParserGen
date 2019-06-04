@@ -3,6 +3,10 @@ import sys
 
 
 class LexemDictionary():
+    '''
+    A basic lexem dictionary that will be fed to the lexer writer and
+    used as a basis to find already known lexems.
+    '''
 
     regexExpressions = [
         # White space

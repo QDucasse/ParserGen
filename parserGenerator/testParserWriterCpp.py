@@ -9,6 +9,7 @@ from parserWriter import ParserWriter
 from prettyprinter import PrettyPrinter
 
 if __name__ == '__main__':
+    # Generates the c++ results
     testFileName = 'grammars/MiniCpp_grammar.ebnf'
 
     try:
@@ -28,7 +29,7 @@ if __name__ == '__main__':
     writer = LexerWriter("results/C_pp/MiniCppLexer.py")
     writer.visit(grammar)
     writer.write(writer.lexemList)
-    
+
     writerParser = ParserWriter(writer.lexemList,"results/C_pp/MiniCppParser.py")
     writerParser.visit(grammar)
 

@@ -9,6 +9,7 @@ from parserWriter import ParserWriter
 from prettyprinter import PrettyPrinter
 
 if __name__ == '__main__':
+    # Generates the java results
     testFileName = 'grammars/MiniJava_grammar.ebnf'
 
     try:
@@ -28,7 +29,7 @@ if __name__ == '__main__':
     writer = LexerWriter("results/Java/MiniJavaLexer.py")
     writer.visit(grammar)
     writer.write(writer.lexemList)
-    
+
     writerParser = ParserWriter(writer.lexemList,"results/Java/MiniJavaParser.py")
     writerParser.visit(grammar)
 

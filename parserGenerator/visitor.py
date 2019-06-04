@@ -1,5 +1,9 @@
 class Visitor:
-
+    '''
+    Main visitor class
+    Templating the successive accept calls in order to be used by
+    the subclasses lexerWriter and parserWriter
+    '''
     def visit(self,grammar):
         grammar.accept(self,grammar)
 

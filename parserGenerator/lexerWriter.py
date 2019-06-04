@@ -4,7 +4,13 @@ from lexemDictionary import LexemDictionary
 from file import File
 
 class LexerWriter(Visitor):
+    '''
+    First implementation of a lexer writer
+    This lexer writes raw text in a new file.
 
+    Deprecated since we use Jinja to create text templates
+    SEE lexerWriterV2
+    '''
     def __init__(self,name="results/lexerWriter/lexerWriter_output.py"):
         self.lexemDictionary = LexemDictionary()
         self.lexemList = [(r'[\n]+', "None")]

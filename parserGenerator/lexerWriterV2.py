@@ -4,14 +4,24 @@ from lexemDictionary_v2 import LexemDictionary
 from jinja2 import Environment, FileSystemLoader
 
 class LexerWriter(Visitor):
-
+    '''
+    Lexer writer creating a lexer from a program ast
+    --> inherits from Visitor
+    The only two important classes that are visited are :
+    - Terminal string with single quotes
+    - Terminal string with double quotes
+    as they are the lexems of the parsed grammar
+    '''
     def __init__(self,name="results/lexerWriter/lexerWriter_output.py"):
         self.lexemDictionary = LexemDictionary()
         self.lexemList = [(r'[\n]+', "None")]
         self.name=name
 
     def write(self,lexemList):
-        file_loader = FileSystemLoader('templates')#On se place dans le bon dossier 
+        '''
+        Writing lexems inside of the Jinja template
+        '''
+        file_loader = FileSystemLoader('templates')#On se place dans le bon dossier
         env = Environment(loader=file_loader)
         template = env.get_template('LexerTemplate_jinja.py')#On ouvre le template
         lex=""
@@ -25,7 +35,14 @@ class LexerWriter(Visitor):
         f.close()
 
     def visitTerminalStringSQuote(self,terminalStringSQuote):
-        lexemToTest = terminalStringSQuote.value[1:-1] # to reomve quotes
+        '''
+        Visits the terminal string and tries matching it in the lexem dictionary
+        if match:
+            add the already known lexem to the lexem list
+        if not:
+            add the new lexem to the lexem list
+        '''
+        lexemToTest = terminalStringSQuote.value[1:-1] # to remove quotes
         regexExpressions = self.lexemDictionary.regexExpressions
         match = None
         end = False
@@ -46,4 +63,7 @@ class LexerWriter(Visitor):
 
 
     def visitTerminalStringDQuote(self,terminalStringDQuote):
+        '''
+        Same function as above as simple or double quotes do not make a difference here
+        '''
         self.visitTerminalStringSQuote(terminalStringDQuote)
