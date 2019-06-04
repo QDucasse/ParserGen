@@ -7,14 +7,14 @@
 ## Project definition
 
 As part of our compilation course, we had to put together a `lexer`, `parser`,`ast`, `visitor` and `pretty printer` **for the language** of our choice, **in the language** of our choice. What we chose here is a **PYTHON-based EBNF compiler**. The *Extended Backus-Naur Form* (EBNF) is the language used to describe the syntax of any programming language. The objectives of our project are now:
-	* Define the **EBNF-Grammar**
-	* Write a **lexer** of this grammar
-	* Write a **parser** of the generated *lexems*
-	* Structure the *lexems* in an **Abstract Syntax Tree**
-	* Visit the abstract syntax tree with **visitors**
-	..* **Lexer Writer** creating a lexer for the parsed grammar
-	..* **Parser Writer** creating a parser for the parsed grammar
-	* Pretty print the grammar to double check everything went fine
+* Define the **EBNF-Grammar**
+* Write a **lexer** of this grammar
+* Write a **parser** of the generated *lexems*
+* Structure the *lexems* in an **Abstract Syntax Tree**
+* Visit the abstract syntax tree with **visitors**
+..* **Lexer Writer** creating a lexer for the parsed grammar
+..* **Parser Writer** creating a parser for the parsed grammar
+* Pretty print the grammar to double check everything went fine
 	
 ## Grammar
 
