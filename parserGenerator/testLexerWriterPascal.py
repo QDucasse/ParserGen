@@ -8,6 +8,7 @@ from lexerWriter import LexerWriter
 from prettyPrinter import PrettyPrinter
 
 if __name__ == '__main__':
+    # Generates Pascal results
     testFileName = 'grammars/pascal_grammar.ebnf'
 
     try:

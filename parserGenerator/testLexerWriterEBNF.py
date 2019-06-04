@@ -8,7 +8,9 @@ from lexerWriter import LexerWriter
 from prettyPrinter import PrettyPrinter
 
 if __name__ == '__main__':
-    testFileName = 'grammars/ebnf_grammar.ebnf'
+    # Generates the ebnf results
+
+    testFileName = '../grammars/ebnf_grammar.ebnf'
 
     try:
       with open(testFileName, 'r') as testFile:
@@ -24,10 +26,10 @@ if __name__ == '__main__':
     parser = Parser(verbose)
     grammar = parser.parse(tokens)
 
-    writer = LexerWriter("results/lexerWriter/ebnfLexer.py")
+    writer = LexerWriter("../results/lexerWriter/ebnfLexer.py")
     writer.visit(grammar)
     print(writer.lexemList)
     writer.write(writer.lexemList)
 
-    pp = PrettyPrinter("results/prettyPrinter/ebnf_grammar_pp.ebnf")
+    pp = PrettyPrinter("../results/prettyPrinter/ebnf_grammar_pp.ebnf")
     pp.visit(grammar)

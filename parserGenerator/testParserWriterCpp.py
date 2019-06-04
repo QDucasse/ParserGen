@@ -10,7 +10,7 @@ from prettyprinter import PrettyPrinter
 
 if __name__ == '__main__':
     # Generates the c++ results
-    testFileName = 'grammars/MiniCpp_grammar.ebnf'
+    testFileName = '../grammars/MiniCpp_grammar.ebnf'
 
     try:
       with open(testFileName, 'r') as testFile:
@@ -26,12 +26,12 @@ if __name__ == '__main__':
     parser = Parser(verbose)
     grammar = parser.parse(tokens)
 
-    writer = LexerWriter("results/C_pp/MiniCppLexer.py")
+    writer = LexerWriter("../results/C_pp/MiniCppLexer.py")
     writer.visit(grammar)
     writer.write(writer.lexemList)
 
     writerParser = ParserWriter(writer.lexemList,"results/C_pp/MiniCppParser.py")
     writerParser.visit(grammar)
 
-    pp = PrettyPrinter("results/C_pp/Cpp_grammar_pp.ebnf")
+    pp = PrettyPrinter("../results/C_pp/Cpp_grammar_pp.ebnf")
     pp.visit(grammar)
