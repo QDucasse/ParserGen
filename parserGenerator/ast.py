@@ -1,6 +1,9 @@
-#from visitor import Visitor
+
 
 class Node():
+    '''
+    Principal Node of the system, meta-defines the accept function for all others subnodes
+    '''
     def accept(self, visitor, args):
         className  = self.__class__.__name__
         methodName = getattr(visitor, "visit" + className)
@@ -10,6 +13,9 @@ class Node():
 
 
 class Grammar(Node):
+    '''
+    Our equivalent to other languages "Program", starting point for the parsing operation
+    '''
     def __init__(self,syntax=None):
         self.syntax = syntax
 
@@ -17,6 +23,10 @@ class Grammar(Node):
         return "Grammar - {0}".format(str(self.syntax))
 
 class Syntax(Node):
+    '''
+    A set of syntax rules
+    Syntax = SyntaxRule, {SyntaxRule};
+    '''
     def __init__(self,syntaxRules=[]):
         self.syntaxRules = syntaxRules
 
@@ -30,6 +40,10 @@ class Syntax(Node):
         return string
 
 class SyntaxRule(Node):
+    '''
+    A syntax rule
+    SyntaxRule = Identifier, '=', Definitions, ';';  //EBNF
+    '''
     def __init__(self,identifier=None,definitions=None):
         self.identifier  = identifier
         self.definitions = definitions
@@ -40,6 +54,10 @@ class SyntaxRule(Node):
         return string
 
 class Definitions(Node):
+    '''
+    A set of definitions
+    Definitions = Definition, {'|', Definition};  //EBNF
+    '''
     def __init__(self,definitions=[]):
         self.definitions = definitions
 
@@ -53,6 +71,10 @@ class Definitions(Node):
         return string
 
 class Definition(Node):
+    '''
+    A definition (a set of terms)
+    Definition = Term, {',', Term};  //EBNF
+    '''
     def __init__(self,terms=[]):
         self.terms = []
 
@@ -67,6 +89,10 @@ class Definition(Node):
 
 
 class Term(Node):
+    '''
+    A term (Factor & Exception)
+    Term = Factor, ['-', Exception];  //EBNF
+    '''
     def __init__(self,factor=None,exception=None):
         self.factor    = factor
         self.exception = exception
@@ -78,6 +104,10 @@ class Term(Node):
          return string
 
 class Exception(Node):
+    '''
+    An exception
+    Exception = Factor;  //EBNF
+    '''
     def __init__(self,factor=None):
         self.factor = factor
 
@@ -85,6 +115,10 @@ class Exception(Node):
     #     return "Exception - {0}".format(self.factor)
 
 class Factor(Node):
+    '''
+    A factor
+    Factor = [Integer, '*'], Primary; //EBNF
+    '''
     def __init__(self,integer=0,primary=None):
         self.integer = integer
         self.primary = primary
@@ -97,6 +131,16 @@ class Factor(Node):
         return string
 
 class Primary(Node):
+    '''
+    A primary corresponding to either of those sequence:
+    Primary = OptionalSeq
+            | RepeatedSeq
+            | GroupedSeq
+            | SpecialSeq
+            | TerminalString
+            | Identifier
+            | Empty;            //EBNF
+    '''
     def __init__(self,optionalSeq    = None,
                       repeatedSeq    = None,
                       groupedSeq     = None,
@@ -132,6 +176,10 @@ class Primary(Node):
 
 
 class OptionalSeq(Node):
+    '''
+    An optional sequence:
+    OptionalSeq = '[', Definitions, ']';  //EBNF
+    '''
     def __init__(self,definitions=[]):
         self.definitions = definitions
 
@@ -143,6 +191,10 @@ class OptionalSeq(Node):
         return string
 
 class RepeatedSeq(Node):
+    '''
+    A repeated sequence:
+    RepeatedSeq = '{', Definitions, '}';  //EBNF
+    '''
     def __init__(self,definitions=[]):
         self.definitions = definitions
 
@@ -153,6 +205,10 @@ class RepeatedSeq(Node):
         return string
 
 class GroupedSeq(Node):
+    '''
+    A grouped sequence
+    GroupedSeq = '(', Definitions, ')';  //EBNF
+    '''
     def __init__(self,definitions=[]):
         self.definitions = definitions
 
@@ -163,6 +219,10 @@ class GroupedSeq(Node):
         return string
 
 class SpecialSeq(Node):
+    '''
+    A special Sequence
+    SpecialSeq = '?', {Character - '?'}, '?';  //EBNF
+    '''
     def __init__(self,value=''):
         self.value = value
 
@@ -177,6 +237,10 @@ class TerminalString(Node):
         return "Terminal String - {0}".format(self.value)
 
 class TerminalStringSQuote(TerminalString):
+    '''
+    A terminal string with simple quotes
+    TerminalString = "'", Character - "'", {Character - "'"}, "'" //EBNF
+    '''
     def __init__(self,value=''):
         super().__init__(value)
         self.separator = '\''
@@ -185,6 +249,10 @@ class TerminalStringSQuote(TerminalString):
         return "Terminal String (S Quote) - {0}".format(self.value)
 
 class TerminalStringDQuote(TerminalString):
+    '''
+    A terminal string with double quotes
+    TerminalString = '"', Character - '"', {Character - '"'}, '"' //EBNF
+    '''
     def __init__(self,value=''):
         super().__init__(value)
         self.separator = '\"'
@@ -193,6 +261,11 @@ class TerminalStringDQuote(TerminalString):
         return "Terminal String (D Quote) - {0}".format(self.value)
 
 class Identifier(Node):
+    '''
+    An identifier
+    Identifier = Letter, {Letter | Digit};  //EBNF
+    --> Simplified with a value only here
+    '''
     def __init__(self,value=''):
         self.value = value
 
@@ -200,6 +273,10 @@ class Identifier(Node):
         return "Identifier: '{0}' ".format(self.value)
 
 class Empty(Node):
+    '''
+    An empty primary
+    Empty = ;  //EBNF
+    '''
     def __init__(self):
         pass
 
@@ -207,6 +284,11 @@ class Empty(Node):
         return "Empty Primary"
 
 class Integer(Node):
+    '''
+    An integer
+    Integer = Digit, {Digit};  //EBNF
+     --> Simplified with a value only here
+    '''
     def __init__(self,value=0):
         self.value = value
 
