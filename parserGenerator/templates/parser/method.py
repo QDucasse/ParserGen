@@ -18,5 +18,3 @@
             {% endif %}
         {% endfor -%}
         self.indentator.dedent()
-
-

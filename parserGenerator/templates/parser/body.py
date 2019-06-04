@@ -83,5 +83,3 @@ class Parser:
             else:
                 result.append(token)
         return result
-        
-
