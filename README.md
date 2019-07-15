@@ -12,8 +12,8 @@ As part of our compilation course, we had to put together a `lexer`, `parser`,`a
 * Write a **parser** of the generated *lexems*
 * Structure the *lexems* in an **Abstract Syntax Tree**
 * Visit the abstract syntax tree with **visitors**
-..1. **Lexer Writer** creating a lexer for the parsed grammar
-..2. **Parser Writer** creating a parser for the parsed grammar
+⋅⋅* **Lexer Writer** creating a lexer for the parsed grammar
+⋅⋅* **Parser Writer** creating a parser for the parsed grammar
 * Pretty print the grammar to double check everything went fine
 	
 ## Grammar
