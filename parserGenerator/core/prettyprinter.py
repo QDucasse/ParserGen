@@ -1,3 +1,11 @@
+# -*- coding: utf-8 -*-
+"""
+Created on Sun Aug 18 20:35:45 2019
+
+@author: Quentin Ducasse & Kevin Bedin
+"""
+
+
 from lexemDictionary import LexemDictionary
 from visitor import Visitor
 from file import File
