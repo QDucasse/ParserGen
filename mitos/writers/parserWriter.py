@@ -8,6 +8,8 @@ Created on Sun Aug 18 20:35:45 2019
 
 import re
 
+from jinja2 import Environment, FileSystemLoader
+
 from mitos.core    import Visitor
 from mitos.writers import LexemDictionary
 

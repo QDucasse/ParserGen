@@ -1,16 +1,21 @@
+# -*- coding: utf-8 -*-
+"""
+Created on Sun Aug 18 20:35:45 2019
+
+@author: Quentin Ducasse
+"""
+
 import re
 import sys
 import argparse
-from lexer import Lexer
-from parser import Parser
-#from visitor import Visitor
-from lexerWriterV2 import LexerWriter
-from parserWriter import ParserWriter
-from prettyprinter import PrettyPrinter
+
+from mitos.core    import Parser, PrettyPrinter, Lexer
+from mitos.writers import LexerWriter, ParserWriter
+
 
 if __name__ == '__main__':
     # Generates the ebnf results
-    testFileName = 'grammars/MiniJava_grammar.ebnf'
+    testFileName = 'grammars/miniJava.ebnf'
 
     try:
       with open(testFileName, 'r') as testFile:
@@ -26,12 +31,12 @@ if __name__ == '__main__':
     parser = Parser(verbose)
     grammar = parser.parse(lexems)
 
-    writer = LexerWriter("results/Java/MiniJavaLexer.py")
+    writer = LexerWriter("results/miniJava/MiniJavaLexer.py")
     writer.visit(grammar)
     writer.write(writer.lexemList)
 
-    writerParser = ParserWriter(writer.lexemList,"results/Java/MiniJavaParser.py")
+    writerParser = ParserWriter(writer.lexemList,"results/miniJava/MiniJavaParser.py")
     writerParser.visit(grammar)
 
-    pp = PrettyPrinter("results/Java/java_grammar_pp.ebnf")
+    pp = PrettyPrinter("results/miniJava/mini_java_grammar_pp.ebnf")
     pp.visit(grammar)
