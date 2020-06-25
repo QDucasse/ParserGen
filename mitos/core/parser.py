@@ -71,10 +71,10 @@ class Parser(object):
         actualLexem = self.show_next()
         actualTag = actualLexem.tag
         actualPosition = actualLexem.position
-        if actualtag == tag:
+        if actualTag == tag:
             return self.accept_it()
         else:
-            print('Error at {}: expected {}, got {} instead'.format(str(actualPosition), tag, actualtag))
+            print('Error at {}: expected {}, got {} instead'.format(str(actualPosition), tag, actualTag))
             sys.exit(1)
 
     def maybe(self, tag):
@@ -104,8 +104,6 @@ class Parser(object):
             Popped lexem out of the lexems list.
         '''
         lexem = self.show_next()
-        output = Colors.OKGREEN + str(lexem.tag) + ' ' + lexem.value + Colors.ENDC
-        self.indentator.say(output)
         return self.lexems.pop(0)
 
     def remove_comments(self):
@@ -164,7 +162,7 @@ class Parser(object):
         while (len(self.lexems)>0):
             syntaxRule = self.parseSyntaxRule()
             syntax.addRule(syntaxRule)
-        self.indentator.say(Colors.OKGREEN + 'End Syntax' +  Colors.ENDC + str(syntax.syntaxRules))
+        self.indentator.say(Colors.OKGREEN + 'End Syntax' +  Colors.ENDC)
         self.indentator.dedent()
         return syntax
 
@@ -182,7 +180,7 @@ class Parser(object):
         definitions = self.parseDefinitions()
         syntaxRule.definitions = definitions
         self.expect('TERMINATOR')
-        self.indentator.say(Colors.OKGREEN + 'End Syntax Rule with values:'+ Colors.ENDC+ str(syntaxRule.identifier) + ' ' + str(syntaxRule.definitions))
+        self.indentator.say(Colors.OKGREEN + 'End Syntax Rule with values:'+ Colors.ENDC)
         self.indentator.dedent()
         return syntaxRule
 
@@ -202,7 +200,7 @@ class Parser(object):
             self.expect('SEPARATOR')
             otherDefinition = self.parseDefinition()
             definitions.addDefinition(otherDefinition)
-        self.indentator.say(Colors.OKGREEN + 'End Definitions with values:' +  Colors.ENDC + str(definitions.definitions))
+        self.indentator.say(Colors.OKGREEN + 'End Definitions with values:' +  Colors.ENDC)
         self.indentator.dedent()
         return definitions
 
@@ -221,7 +219,7 @@ class Parser(object):
             self.expect('CONCATENATION')
             otherTerm=self.parseTerm()
             definition.addTerm(otherTerm)
-        self.indentator.say(Colors.OKGREEN + 'End Definition with values:' +  Colors.ENDC + str(definition.terms))
+        self.indentator.say(Colors.OKGREEN + 'End Definition with values:' +  Colors.ENDC)
         self.indentator.dedent()
         return definition
 
@@ -240,7 +238,7 @@ class Parser(object):
             self.expect('EXCEPT')
             exception = self.parseException()
             term.exception = exception
-        self.indentator.say(Colors.OKGREEN + 'End Syntax with values: ' +  Colors.ENDC + str(term.factor) + ' ' + str(term.exception))
+        self.indentator.say(Colors.OKGREEN + 'End Syntax with values: ' +  Colors.ENDC)
         self.indentator.dedent()
         return term
 
@@ -254,7 +252,7 @@ class Parser(object):
         exception = Exception()
         factor = self.parseFactor()
         exception.factor = factor
-        self.indentator.say(Colors.OKGREEN + 'End Exception with value: ' +  Colors.ENDC + str(exception.factor))
+        self.indentator.say(Colors.OKGREEN + 'End Exception with value: ' +  Colors.ENDC)
         self.indentator.dedent()
         return exception
 
@@ -274,7 +272,7 @@ class Parser(object):
             self.expect('REPETITION')
         primary = self.parsePrimary()
         factor.primary = primary
-        self.indentator.say(Colors.OKGREEN + 'End Factor with values:' +  Colors.ENDC + str(factor.integer) + ' ' +str(factor.primary))
+        self.indentator.say(Colors.OKGREEN + 'End Factor with values:' +  Colors.ENDC)
         self.indentator.dedent()
         return factor
 
@@ -314,7 +312,7 @@ class Parser(object):
         else:
             empty = self.parseEmpty()
             primary.empty = empty
-        self.indentator.say(Colors.OKGREEN + 'End Primary with values: ' +  Colors.ENDC + str(primary.optionalSeq)    + ' '                                                                               + str(primary.empty))
+        self.indentator.say(Colors.OKGREEN + 'End Primary' +  Colors.ENDC)
         self.indentator.dedent()
         return primary
 
@@ -323,14 +321,14 @@ class Parser(object):
         Parses an optional sequence:
         OptionalSeq = '[', Definitions, ']';  //EBNF
         '''
-        self.indentator.indent('Parsing Optional Sequence')
+        self.indentator.indent('Parsing Optional Sequence...')
         self.indentator.say(Colors.OKGREEN + 'New Optional Sequence' +  Colors.ENDC)
         optionalSeq = OptionalSeq()
         self.expect('LBRACKET')
         definitions = self.parseDefinitions()
         optionalSeq.definitions = definitions
         self.expect('RBRACKET')
-        self.indentator.say(Colors.OKGREEN + 'End Optional Sequence with values: ' +  Colors.ENDC + str(optionalSeq.definitions))
+        self.indentator.say(Colors.OKGREEN + 'End Optional Sequence')
         self.indentator.dedent()
         return optionalSeq
 
@@ -339,7 +337,7 @@ class Parser(object):
         Parses a repeated sequence:
         RepeatedSeq = '{', Definitions, '}';  //EBNF
         '''
-        self.indentator.indent('Parsing Repeated Sequence')
+        self.indentator.indent('Parsing Repeated Sequence...')
         self.indentator.say(Colors.OKGREEN + 'Repeated Sequence' +  Colors.ENDC)
         repeatedSeq = RepeatedSeq()
         self.expect('LBRACE')
@@ -347,7 +345,7 @@ class Parser(object):
         repeatedSeq.definitions = definitions
         self.expect('RBRACE')
         self.indentator.dedent()
-        self.indentator.say(Colors.OKGREEN + 'End Repeated Sequence with values: ' +  Colors.ENDC + str(repeatedSeq.definitions))
+        self.indentator.say(Colors.OKGREEN + 'End Repeated Sequence')
         return repeatedSeq
 
     def parseGroupedSeq(self):
@@ -355,7 +353,7 @@ class Parser(object):
         Parses a grouped sequence:
         GroupedSeq = '(', Definitions, ')';  //EBNF
         '''
-        self.indentator.indent('Parsing Grouped Sequence')
+        self.indentator.indent('Parsing Grouped Sequence...')
         self.indentator.say(Colors.OKGREEN + 'New Group Sequence' +  Colors.ENDC)
         groupedSeq = GroupedSeq()
         self.expect('LPAREN')
@@ -363,7 +361,7 @@ class Parser(object):
         groupedSeq.definitions = definitions
         self.expect('RPAREN')
         self.indentator.dedent()
-        self.indentator.say(Colors.OKGREEN + 'End Grouped Sequence with values: ' +  Colors.ENDC + str(groupedSeq.definitions))
+        self.indentator.say(Colors.OKGREEN + 'End Grouped Sequence' +  Colors.ENDC)
         return groupedSeq
 
     def parseSpecialSeq(self):
@@ -371,14 +369,14 @@ class Parser(object):
         Parses a special sequence:
         SpecialSeq = '?', {Character - '?'}, '?';  //EBNF
         '''
-        self.indentator.indent('Parsing Special Sequence')
+        self.indentator.indent('Parsing Special Sequence...')
         self.indentator.say(Colors.OKGREEN + 'New Special Sequence' +  Colors.ENDC)
         specialSeq = SpecialSeq()
         token = self.expect('SPECIAL')
         value = token.value
         specialSeq.value = value
         self.indentator.dedent()
-        self.indentator.say(Colors.OKGREEN + 'End Special Sequence with values: ' +  Colors.ENDC + str(specialSeq.value))
+        self.indentator.say(Colors.OKGREEN + 'End Special Sequence')
         return specialSeq
 
     def parseTerminalString(self):
@@ -387,7 +385,7 @@ class Parser(object):
         TerminalString = "'", Character - "'", {Character - "'"}, "'"
                        | '"', Character - '"', {Character - '"'}, '"';  //EBNF
         '''
-        self.indentator.indent('Parsing Terminal String')
+        self.indentator.indent('Parsing Terminal String...')
         self.indentator.say(Colors.OKGREEN + 'New Terminal String' +  Colors.ENDC)
         if self.show_next().tag == 'SQUOTE':
             terminalString = TerminalStringSQuote()
@@ -399,7 +397,8 @@ class Parser(object):
             token = self.expect('DQUOTE')
             value = token.value
             terminalString.value = value
-        self.indentator.say(Colors.OKGREEN + 'End Terminal String with values: ' +  Colors.ENDC + str(terminalString.value))
+        self.indentator.say(Colors.OKGREEN + 'TERMINAL STRING ' + Colors.ENDC + Colors.OKBLUE + value)
+        self.indentator.say(Colors.OKGREEN + 'End Terminal String')
         self.indentator.dedent()
         return terminalString
 
@@ -408,13 +407,14 @@ class Parser(object):
         Parses an identifier:    (already done in the lexer)
         Identifier = Letter, {Letter | Digit};  //EBNF
         '''
-        self.indentator.indent('Parsing Identifier')
+        self.indentator.indent('Parsing Identifier...')
         self.indentator.say(Colors.OKGREEN + 'New Identifier' +  Colors.ENDC)
         identifier = Identifier()
         token = self.expect('IDENTIFIER')
         value = token.value
         identifier.value = value
-        self.indentator.say(Colors.OKGREEN + 'End Identifier values: ' +  Colors.ENDC + str(identifier.value))
+        self.indentator.say(Colors.OKGREEN + 'IDENTIFIER ' + Colors.ENDC + Colors.OKBLUE + value)
+        self.indentator.say(Colors.OKGREEN + 'End Identifier' + Colors.ENDC)
         self.indentator.dedent()
         return identifier
 
@@ -423,7 +423,7 @@ class Parser(object):
         Parses an empty primary:
         Empty = ;  //EBNF
         '''
-        self.indentator.indent('Parsing Empty')
+        self.indentator.indent('Parsing Empty...')
         self.indentator.say(Colors.OKGREEN + 'New Empty' +  Colors.ENDC)
         empty = Empty()
         self.indentator.dedent()
@@ -435,12 +435,13 @@ class Parser(object):
         Parses an integer:   (already done in the lexer)
         Integer = Digit, {Digit};  //EBNF
         '''
-        self.indentator.indent('Parsing Integer')
+        self.indentator.indent('Parsing Integer...')
         self.indentator.say(Colors.OKGREEN + 'New Integer' +  Colors.ENDC)
         integer = Integer()
         token = self.expect('INTEGER')
         value = token.value
         integer.value = value
-        self.indentator.say(Colors.OKGREEN + 'End Integer with values: ' +  Colors.ENDC + str(integer.value))
+        self.indentator.say(Colors.OKGREEN + 'INTEGER ' + Colors.ENDC + Colors.OKBLUE + value)
+        self.indentator.say(Colors.OKGREEN + 'End Integer' +  Colors.ENDC)
         self.indentator.dedent()
         return integer

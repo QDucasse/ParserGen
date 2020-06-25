@@ -32,4 +32,4 @@ if __name__ == '__main__':
     verbose = True
     parser = Parser(verbose)
     grammar = parser.parse(lexems)
-    print(grammar)
+    # print(grammar)
