@@ -7,16 +7,16 @@ Created on Sun Aug 18 20:35:45 2019
 
 from __future__ import absolute_import
 
-__all__ = ["ast", 
-           "lexer", 
-           "parser", 
+__all__ = ["ast",
+           "lexer",
+           "parser",
            "prettyprinter",
-           "token1",
+           "lexem",
            "visitor"]
 
 from .ast           import *
 from .lexer         import *
 from .parser        import *
 from .prettyprinter import *
-from .token1        import *
+from .lexem         import *
 from .visitor       import *

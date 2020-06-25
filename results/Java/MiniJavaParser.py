@@ -16,7 +16,7 @@ class Parser:
         Returns: None
         '''
         self.indentator = Indent(verbose)
-        self.tokens = []
+        self.lexems = []
         self.errors = 0
 
     def show_next(self, n=1):
@@ -24,39 +24,39 @@ class Parser:
         Returns the next token in the list while not poping it output
         ---
         Args   : int n (optional) the index of the targetted token
-        Returns: token with index n from the tokens list
+        Returns: token with index n from the lexems list
         '''
         try:
-            return self.tokens[n - 1]
+            return self.lexems[n - 1]
         except IndexError:
-            print('ERROR: no more tokens left!')
+            print('ERROR: no more lexems left!')
             sys.exit(1)
 
-    def expect(self, kind):
+    def expect(self, tag):
         '''
-        Pops the next token from the tokens list and tests its type
+        Pops the next token from the lexems list and tests its type
         ---
-        Args   : string kind, the wanted kind
+        Args   : string tag, the wanted tag
         Returns: next token from the list
         '''
-        actualToken = self.show_next()
-        actualKind = actualToken.kind
-        actualPosition = actualToken.position
-        if actualKind == kind:
+        actualLexem = self.show_next()
+        actualtag = actualLexem.tag
+        actualPosition = actualLexem.position
+        if actualtag == tag:
             return self.accept_it()
         else:
-            print('Error at {}: expected {}, got {} instead'.format(str(actualPosition), kind, actualKind))
+            print('Error at {}: expected {}, got {} instead'.format(str(actualPosition), tag, actualtag))
             sys.exit(1)
 
-    # same as expect() but no error if not correct kind
-    def maybe(self, kind):
+    # same as expect() but no error if not correct tag
+    def maybe(self, tag):
         '''
-        Pops the next token from the tokens list without raising error on its type
+        Pops the next token from the lexems list without raising error on its type
         ---
-        Args   : string kind, the wanted kind
+        Args   : string tag, the wanted tag
         Returns: next token from the list
         '''
-        if self.show_next().kind == kind:
+        if self.show_next().tag == tag:
             return self.accept_it()
 
     def accept_it(self):
@@ -66,7 +66,7 @@ class Parser:
         token = self.show_next()
         output = Colors.FAIL + token.value + Colors.ENDC
         self.indentator.say(output)
-        return self.tokens.pop(0)
+        return self.lexems.pop(0)
 
     def remove_comments(self):
         '''
@@ -76,8 +76,8 @@ class Parser:
         Return : None
         '''
         result = []
-        for token in self.tokens:
-            if token.kind == 'COMMENT':
+        for token in self.lexems:
+            if token.tag == 'COMMENT':
                 pass
             else:
                 result.append(token)
@@ -91,8 +91,8 @@ class Parser:
         Return : None
         '''
         result = []
-        for token in self.tokens:
-            if token.kind == 'COMMENT' or token.value==" ":
+        for token in self.lexems:
+            if token.tag == 'COMMENT' or token.value==" ":
                 pass
             else:
                 result.append(token)
@@ -110,7 +110,7 @@ class Parser:
 
 
     def testGoal(self):
-        next=self.show_next().kind
+        next=self.show_next().tag
         testing_list=[]
         test=(next in testing_list)
         if (test): return(test)
@@ -141,7 +141,7 @@ class Parser:
 
 
     def testMainclass(self):
-        next=self.show_next().kind
+        next=self.show_next().tag
         testing_list=['class']
         test=(next in testing_list)
         if (test): return(test)
@@ -152,7 +152,7 @@ class Parser:
         self.indentator.indent('Parsing Classdeclaration')
         self.expect("class")
         self.parseIdentifier()
-        if(self.show_next().kind == "extends"):
+        if(self.show_next().tag == "extends"):
             self.expect("extends")
             self.parseIdentifier()
             
@@ -168,7 +168,7 @@ class Parser:
 
 
     def testClassdeclaration(self):
-        next=self.show_next().kind
+        next=self.show_next().tag
         testing_list=['class']
         test=(next in testing_list)
         if (test): return(test)
@@ -184,7 +184,7 @@ class Parser:
 
 
     def testVardeclaration(self):
-        next=self.show_next().kind
+        next=self.show_next().tag
         testing_list=[]
         test=(next in testing_list)
         if (test): return(test)
@@ -201,7 +201,7 @@ class Parser:
         if(self.testType()):
             self.parseType()
             self.parseIdentifier()
-            while(self.show_next().kind == ","):
+            while(self.show_next().tag == ","):
                 self.expect(",")
                 self.parseType()
                 self.parseIdentifier()
@@ -223,7 +223,7 @@ class Parser:
 
 
     def testMethoddeclaration(self):
-        next=self.show_next().kind
+        next=self.show_next().tag
         testing_list=['public']
         test=(next in testing_list)
         if (test): return(test)
@@ -232,13 +232,13 @@ class Parser:
 
     def parseType(self):
         self.indentator.indent('Parsing Type')
-        if(self.show_next().kind == "int"):
+        if(self.show_next().tag == "int"):
             self.expect("int")
-            if(self.show_next().kind == "["):
+            if(self.show_next().tag == "["):
                 self.expect("[")
                 self.expect("]")
                 
-        elif(self.show_next().kind == "boolean"):
+        elif(self.show_next().tag == "boolean"):
             self.expect("boolean")
         elif(self.testIdentifier()):
             self.parseIdentifier()
@@ -247,7 +247,7 @@ class Parser:
 
 
     def testType(self):
-        next=self.show_next().kind
+        next=self.show_next().tag
         testing_list=['int', 'boolean']
         test=(next in testing_list)
         if (test): return(test)
@@ -257,13 +257,13 @@ class Parser:
 
     def parseStatement(self):
         self.indentator.indent('Parsing Statement')
-        if(self.show_next().kind == "{"):
+        if(self.show_next().tag == "{"):
             self.expect("{")
             while(self.testStatement()):
                 self.parseStatement()
                 
             self.expect("}")
-        elif(self.show_next().kind == "if"):
+        elif(self.show_next().tag == "if"):
             self.expect("if")
             self.expect("(")
             self.parseExpression()
@@ -271,13 +271,13 @@ class Parser:
             self.parseStatement()
             self.expect("else")
             self.parseStatement()
-        elif(self.show_next().kind == "while"):
+        elif(self.show_next().tag == "while"):
             self.expect("while")
             self.expect("(")
             self.parseExpression()
             self.expect(")")
             self.parseStatement()
-        elif(self.show_next().kind == "System.out.println"):
+        elif(self.show_next().tag == "System.out.println"):
             self.expect("System.out.println")
             self.expect("(")
             self.parseExpression()
@@ -301,7 +301,7 @@ class Parser:
 
 
     def testStatement(self):
-        next=self.show_next().kind
+        next=self.show_next().tag
         testing_list=['{', 'if', 'while', 'System.out.println']
         test=(next in testing_list)
         if (test): return(test)
@@ -320,10 +320,10 @@ class Parser:
             self.parseIdentifier()
         elif(self.testSpecial()):
             self.parseSpecial()
-        elif(self.show_next().kind == "!"):
+        elif(self.show_next().tag == "!"):
             self.expect("!")
             self.parseExpression()
-        elif(self.show_next().kind == "("):
+        elif(self.show_next().tag == "("):
             self.expect("(")
             self.parseExpression()
             self.expect(")")
@@ -338,7 +338,7 @@ class Parser:
 
 
     def testExpression(self):
-        next=self.show_next().kind
+        next=self.show_next().tag
         testing_list=['!', '(']
         test=(next in testing_list)
         if (test): return(test)
@@ -359,16 +359,16 @@ class Parser:
         elif(self.testIdentifier()):
             self.parseIdentifier()
             
-        if(self.show_next().kind == "&&" or self.show_next().kind == "<" or self.show_next().kind == "+" or self.show_next().kind == "-" or self.show_next().kind == "*"):
-            if(self.show_next().kind == "&&"):
+        if(self.show_next().tag == "&&" or self.show_next().tag == "<" or self.show_next().tag == "+" or self.show_next().tag == "-" or self.show_next().tag == "*"):
+            if(self.show_next().tag == "&&"):
                 self.expect("&&")
-            elif(self.show_next().kind == "<"):
+            elif(self.show_next().tag == "<"):
                 self.expect("<")
-            elif(self.show_next().kind == "+"):
+            elif(self.show_next().tag == "+"):
                 self.expect("+")
-            elif(self.show_next().kind == "-"):
+            elif(self.show_next().tag == "-"):
                 self.expect("-")
-            elif(self.show_next().kind == "*"):
+            elif(self.show_next().tag == "*"):
                 self.expect("*")
                 
             
@@ -387,7 +387,7 @@ class Parser:
 
 
     def testExpression1(self):
-        next=self.show_next().kind
+        next=self.show_next().tag
         testing_list=[]
         test=(next in testing_list)
         if (test): return(test)
@@ -411,7 +411,7 @@ class Parser:
 
 
     def testExpression2(self):
-        next=self.show_next().kind
+        next=self.show_next().tag
         testing_list=[]
         test=(next in testing_list)
         if (test): return(test)
@@ -428,7 +428,7 @@ class Parser:
 
 
     def testExpression3(self):
-        next=self.show_next().kind
+        next=self.show_next().tag
         testing_list=[]
         test=(next in testing_list)
         if (test): return(test)
@@ -439,7 +439,7 @@ class Parser:
     def parseExpression4(self):
         self.indentator.indent('Parsing Expression4')
         self.parseExpression()
-        if(self.show_next().kind == "("):
+        if(self.show_next().tag == "("):
             self.expect("(")
             if(self.testExpression1()):
                 self.parseExpression1()
@@ -451,7 +451,7 @@ class Parser:
         self.expect("(")
         if(self.testExpression()):
             self.parseExpression()
-            while(self.show_next().kind == ","):
+            while(self.show_next().tag == ","):
                 self.expect(",")
                 self.parseExpression()
                 
@@ -461,7 +461,7 @@ class Parser:
 
 
     def testExpression4(self):
-        next=self.show_next().kind
+        next=self.show_next().tag
         testing_list=[]
         test=(next in testing_list)
         if (test): return(test)
@@ -472,7 +472,7 @@ class Parser:
     def parseExpression5(self):
         self.indentator.indent('Parsing Expression5')
         self.expect("new")
-        if(self.show_next().kind == "int"):
+        if(self.show_next().tag == "int"):
             self.expect("int")
             self.expect("[")
             self.parseExpression()
@@ -484,7 +484,7 @@ class Parser:
 
 
     def testExpression5(self):
-        next=self.show_next().kind
+        next=self.show_next().tag
         testing_list=['new']
         test=(next in testing_list)
         if (test): return(test)
@@ -499,7 +499,7 @@ class Parser:
 
 
     def testExpression6(self):
-        next=self.show_next().kind
+        next=self.show_next().tag
         testing_list=[]
         test=(next in testing_list)
         if (test): return(test)
@@ -509,7 +509,7 @@ class Parser:
 
     def parseExpression7(self):
         self.indentator.indent('Parsing Expression7')
-        if(self.show_next().kind == "("):
+        if(self.show_next().tag == "("):
             self.expect("(")
             if(self.testExpression()):
                 self.parseExpression()
@@ -520,7 +520,7 @@ class Parser:
 
 
     def testExpression7(self):
-        next=self.show_next().kind
+        next=self.show_next().tag
         testing_list=['(']
         test=(next in testing_list)
         if (test): return(test)
@@ -529,16 +529,16 @@ class Parser:
 
     def parseBool(self):
         self.indentator.indent('Parsing Bool')
-        if(self.show_next().kind == "true"):
+        if(self.show_next().tag == "true"):
             self.expect("true")
-        elif(self.show_next().kind == "false"):
+        elif(self.show_next().tag == "false"):
             self.expect("false")
             
         self.indentator.dedent()
 
 
     def testBool(self):
-        next=self.show_next().kind
+        next=self.show_next().tag
         testing_list=['true', 'false']
         test=(next in testing_list)
         if (test): return(test)
@@ -548,7 +548,7 @@ class Parser:
     def parseSpecial(self):
         self.indentator.indent('Parsing Special')
         self.expect("this")
-        if(self.show_next().kind == "."):
+        if(self.show_next().tag == "."):
             self.expect(".")
             
         if(self.testExpression6()):
@@ -558,7 +558,7 @@ class Parser:
 
 
     def testSpecial(self):
-        next=self.show_next().kind
+        next=self.show_next().tag
         testing_list=['this']
         test=(next in testing_list)
         if (test): return(test)
@@ -567,116 +567,116 @@ class Parser:
 
     def parseAlphabeticcharacter(self):
         self.indentator.indent('Parsing Alphabeticcharacter')
-        if(self.show_next().kind == "A"):
+        if(self.show_next().tag == "A"):
             self.expect("A")
-        elif(self.show_next().kind == "B"):
+        elif(self.show_next().tag == "B"):
             self.expect("B")
-        elif(self.show_next().kind == "C"):
+        elif(self.show_next().tag == "C"):
             self.expect("C")
-        elif(self.show_next().kind == "D"):
+        elif(self.show_next().tag == "D"):
             self.expect("D")
-        elif(self.show_next().kind == "E"):
+        elif(self.show_next().tag == "E"):
             self.expect("E")
-        elif(self.show_next().kind == "F"):
+        elif(self.show_next().tag == "F"):
             self.expect("F")
-        elif(self.show_next().kind == "G"):
+        elif(self.show_next().tag == "G"):
             self.expect("G")
-        elif(self.show_next().kind == "H"):
+        elif(self.show_next().tag == "H"):
             self.expect("H")
-        elif(self.show_next().kind == "I"):
+        elif(self.show_next().tag == "I"):
             self.expect("I")
-        elif(self.show_next().kind == "J"):
+        elif(self.show_next().tag == "J"):
             self.expect("J")
-        elif(self.show_next().kind == "K"):
+        elif(self.show_next().tag == "K"):
             self.expect("K")
-        elif(self.show_next().kind == "L"):
+        elif(self.show_next().tag == "L"):
             self.expect("L")
-        elif(self.show_next().kind == "M"):
+        elif(self.show_next().tag == "M"):
             self.expect("M")
-        elif(self.show_next().kind == "N"):
+        elif(self.show_next().tag == "N"):
             self.expect("N")
-        elif(self.show_next().kind == "O"):
+        elif(self.show_next().tag == "O"):
             self.expect("O")
-        elif(self.show_next().kind == "P"):
+        elif(self.show_next().tag == "P"):
             self.expect("P")
-        elif(self.show_next().kind == "Q"):
+        elif(self.show_next().tag == "Q"):
             self.expect("Q")
-        elif(self.show_next().kind == "R"):
+        elif(self.show_next().tag == "R"):
             self.expect("R")
-        elif(self.show_next().kind == "S"):
+        elif(self.show_next().tag == "S"):
             self.expect("S")
-        elif(self.show_next().kind == "T"):
+        elif(self.show_next().tag == "T"):
             self.expect("T")
-        elif(self.show_next().kind == "U"):
+        elif(self.show_next().tag == "U"):
             self.expect("U")
-        elif(self.show_next().kind == "V"):
+        elif(self.show_next().tag == "V"):
             self.expect("V")
-        elif(self.show_next().kind == "W"):
+        elif(self.show_next().tag == "W"):
             self.expect("W")
-        elif(self.show_next().kind == "X"):
+        elif(self.show_next().tag == "X"):
             self.expect("X")
-        elif(self.show_next().kind == "Y"):
+        elif(self.show_next().tag == "Y"):
             self.expect("Y")
-        elif(self.show_next().kind == "Z"):
+        elif(self.show_next().tag == "Z"):
             self.expect("Z")
-        elif(self.show_next().kind == "a"):
+        elif(self.show_next().tag == "a"):
             self.expect("a")
-        elif(self.show_next().kind == "b"):
+        elif(self.show_next().tag == "b"):
             self.expect("b")
-        elif(self.show_next().kind == "c"):
+        elif(self.show_next().tag == "c"):
             self.expect("c")
-        elif(self.show_next().kind == "d"):
+        elif(self.show_next().tag == "d"):
             self.expect("d")
-        elif(self.show_next().kind == "e"):
+        elif(self.show_next().tag == "e"):
             self.expect("e")
-        elif(self.show_next().kind == "f"):
+        elif(self.show_next().tag == "f"):
             self.expect("f")
-        elif(self.show_next().kind == "g"):
+        elif(self.show_next().tag == "g"):
             self.expect("g")
-        elif(self.show_next().kind == "h"):
+        elif(self.show_next().tag == "h"):
             self.expect("h")
-        elif(self.show_next().kind == "i"):
+        elif(self.show_next().tag == "i"):
             self.expect("i")
-        elif(self.show_next().kind == "j"):
+        elif(self.show_next().tag == "j"):
             self.expect("j")
-        elif(self.show_next().kind == "k"):
+        elif(self.show_next().tag == "k"):
             self.expect("k")
-        elif(self.show_next().kind == "l"):
+        elif(self.show_next().tag == "l"):
             self.expect("l")
-        elif(self.show_next().kind == "m"):
+        elif(self.show_next().tag == "m"):
             self.expect("m")
-        elif(self.show_next().kind == "n"):
+        elif(self.show_next().tag == "n"):
             self.expect("n")
-        elif(self.show_next().kind == "o"):
+        elif(self.show_next().tag == "o"):
             self.expect("o")
-        elif(self.show_next().kind == "p"):
+        elif(self.show_next().tag == "p"):
             self.expect("p")
-        elif(self.show_next().kind == "q"):
+        elif(self.show_next().tag == "q"):
             self.expect("q")
-        elif(self.show_next().kind == "r"):
+        elif(self.show_next().tag == "r"):
             self.expect("r")
-        elif(self.show_next().kind == "s"):
+        elif(self.show_next().tag == "s"):
             self.expect("s")
-        elif(self.show_next().kind == "t"):
+        elif(self.show_next().tag == "t"):
             self.expect("t")
-        elif(self.show_next().kind == "u"):
+        elif(self.show_next().tag == "u"):
             self.expect("u")
-        elif(self.show_next().kind == "v"):
+        elif(self.show_next().tag == "v"):
             self.expect("v")
-        elif(self.show_next().kind == "w"):
+        elif(self.show_next().tag == "w"):
             self.expect("w")
-        elif(self.show_next().kind == "x"):
+        elif(self.show_next().tag == "x"):
             self.expect("x")
-        elif(self.show_next().kind == "y"):
+        elif(self.show_next().tag == "y"):
             self.expect("y")
-        elif(self.show_next().kind == "z"):
+        elif(self.show_next().tag == "z"):
             self.expect("z")
             
         self.indentator.dedent()
 
 
     def testAlphabeticcharacter(self):
-        next=self.show_next().kind
+        next=self.show_next().tag
         testing_list=['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z', 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z']
         test=(next in testing_list)
         if (test): return(test)
@@ -690,7 +690,7 @@ class Parser:
 
 
     def testSpecialcharacter(self):
-        next=self.show_next().kind
+        next=self.show_next().tag
         testing_list=['_']
         test=(next in testing_list)
         if (test): return(test)
@@ -707,7 +707,7 @@ class Parser:
 
 
     def testWhitespace(self):
-        next=self.show_next().kind
+        next=self.show_next().tag
         testing_list=[' ']
         test=(next in testing_list)
         if (test): return(test)
@@ -740,7 +740,7 @@ class Parser:
 
 
     def testIdentifier(self):
-        next=self.show_next().kind
+        next=self.show_next().tag
         testing_list=[]
         test=(next in testing_list)
         if (test): return(test)
@@ -758,7 +758,7 @@ class Parser:
 
 
     def testAllcharacters(self):
-        next=self.show_next().kind
+        next=self.show_next().tag
         testing_list=[]
         test=(next in testing_list)
         if (test): return(test)
@@ -768,32 +768,32 @@ class Parser:
 
     def parseDigit(self):
         self.indentator.indent('Parsing Digit')
-        if(self.show_next().kind == "0"):
+        if(self.show_next().tag == "0"):
             self.expect("0")
-        elif(self.show_next().kind == "1"):
+        elif(self.show_next().tag == "1"):
             self.expect("1")
-        elif(self.show_next().kind == "2"):
+        elif(self.show_next().tag == "2"):
             self.expect("2")
-        elif(self.show_next().kind == "3"):
+        elif(self.show_next().tag == "3"):
             self.expect("3")
-        elif(self.show_next().kind == "4"):
+        elif(self.show_next().tag == "4"):
             self.expect("4")
-        elif(self.show_next().kind == "5"):
+        elif(self.show_next().tag == "5"):
             self.expect("5")
-        elif(self.show_next().kind == "6"):
+        elif(self.show_next().tag == "6"):
             self.expect("6")
-        elif(self.show_next().kind == "7"):
+        elif(self.show_next().tag == "7"):
             self.expect("7")
-        elif(self.show_next().kind == "8"):
+        elif(self.show_next().tag == "8"):
             self.expect("8")
-        elif(self.show_next().kind == "9"):
+        elif(self.show_next().tag == "9"):
             self.expect("9")
             
         self.indentator.dedent()
 
 
     def testDigit(self):
-        next=self.show_next().kind
+        next=self.show_next().tag
         testing_list=['0', '1', '2', '3', '4', '5', '6', '7', '8', '9']
         test=(next in testing_list)
         if (test): return(test)
@@ -810,7 +810,7 @@ class Parser:
 
 
     def testIntegerliteral(self):
-        next=self.show_next().kind
+        next=self.show_next().tag
         testing_list=[]
         test=(next in testing_list)
         if (test): return(test)
@@ -825,23 +825,23 @@ class Parser:
 
 
     def testEof(self):
-        next=self.show_next().kind
+        next=self.show_next().tag
         testing_list=['.']
         test=(next in testing_list)
         if (test): return(test)
         return(test)
 
-    def parse(self, tokens, remove_comments_whitespace=False):
+    def parse(self, lexems, remove_comments_whitespace=False):
         '''
         Main function: launches the parsing operation
         ---
         Args:
         Returns
         '''
-        self.tokens = tokens
-        #print(self.tokens)
+        self.lexems = lexems
+        #print(self.lexems)
         if remove_comments_whitespace:
-            self.tokens = self.remove_comments_whitespace()
+            self.lexems = self.remove_comments_whitespace()
         else:
-            self.tokens = self.remove_comments()
+            self.lexems = self.remove_comments()
         self.parseGoal()

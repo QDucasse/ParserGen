@@ -1,29 +1,29 @@
 Goal = MainClass, { ClassDeclaration }, EOF;
-MainClass 	= 	"class", Identifier , "{", "public", "static", "void", "main", "(", "String", "[", "]", Identifier, ")", "{", Statement, "}", "}";
-ClassDeclaration 	= 	"class", Identifier, [ "extends", Identifier ], "{", { VarDeclaration }, { MethodDeclaration },"}";
-VarDeclaration 	= 	Type, Identifier, ";";
-MethodDeclaration 	= 	"public", Type, Identifier, "(", [ Type, Identifier, { ",", Type, Identifier }, ], ")", "{", { VarDeclaration }, { Statement }, "return", Expression, ";", "}";
-Type 	= 	"int", [ "[", "]" ] 
-	| 	"boolean"
-	| 	Identifier
-	; 	
-Statement 	= 	"{", { Statement }, "}"
-	| 	"if", "(", Expression, ")", Statement, "else", Statement
-	| 	"while", "(", Expression, ")", Statement
-	| 	"System.out.println", "(" , Expression, ")", ";"
-	| 	Identifier, "=", Expression, ";"
-	| 	Identifier, "[", Expression, "]", "=", Expression, ";"
-	; 	
-Expression 	= 	Expression1
+MainClass     =     "class", Identifier , "{", "public", "static", "void", "main", "(", "String", "[", "]", Identifier, ")", "{", Statement, "}", "}";
+ClassDeclaration     =     "class", Identifier, [ "extends", Identifier ], "{", { VarDeclaration }, { MethodDeclaration },"}";
+VarDeclaration     =     Type, Identifier, ";";
+MethodDeclaration     =     "public", Type, Identifier, "(", [ Type, Identifier, { ",", Type, Identifier }, ], ")", "{", { VarDeclaration }, { Statement }, "return", Expression, ";", "}";
+Type     =     "int", [ "[", "]" ] 
+    |     "boolean"
+    |     Identifier
+    ;     
+Statement     =     "{", { Statement }, "}"
+    |     "if", "(", Expression, ")", Statement, "else", Statement
+    |     "while", "(", Expression, ")", Statement
+    |     "System.out.println", "(" , Expression, ")", ";"
+    |     Identifier, "=", Expression, ";"
+    |     Identifier, "[", Expression, "]", "=", Expression, ";"
+    ;     
+Expression     =     Expression1
     |   IntegerLiteral
-	| 	Identifier 
-	| 	Special
-	| 	"!", Expression
-	| 	"(", Expression, ")"
-	| 	Expression2
-	| 	Expression3
-	| 	Expression4
-	; 	
+    |     Identifier 
+    |     Special
+    |     "!", Expression
+    |     "(", Expression, ")"
+    |     Expression2
+    |     Expression3
+    |     Expression4
+    ;     
 Expression1 =  ( IntegerLiteral | Identifier ),  [ "&&" | "<" | "+" | "-" | "*" ], ( IntegerLiteral | Identifier | Bool | Special | Expression5);
 Expression2 = Expression , "[", Expression, "]";
 Expression3 = Expression , ".", "length";

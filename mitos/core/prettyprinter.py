@@ -6,9 +6,9 @@ Created on Sun Aug 18 20:35:45 2019
 """
 
 
-from lexemDictionary import LexemDictionary
-from visitor import Visitor
-from file import File
+from mitos.core    import Visitor
+from mitos.writers import LexemDictionary
+from mitos.helpers import File
 
 class PrettyPrinter(Visitor):
     '''
@@ -27,7 +27,6 @@ class PrettyPrinter(Visitor):
         defs.accept(self,defs)
         self.file.write(";\n")
 
-
     def visitDefinitions(self,definitions):
         # Visits all definitions
         for definition in definitions.definitions[0:-1]:
@@ -35,15 +34,12 @@ class PrettyPrinter(Visitor):
             self.file.write("|")
         definitions.definitions[-1].accept(self,definitions.definitions[-1])
 
-
     def visitDefinition(self,definition):
         # Visits all terms
         for term in definition.terms[0:-1]:
             term.accept(self,term)
             self.file.write(",")
         definition.terms[-1].accept(self,definition.terms[-1])
-
-
 
     def visitException(self,exception):
         # Visits the exception
@@ -75,18 +71,14 @@ class PrettyPrinter(Visitor):
     def visitSpecialSeq(self,specialSeq):
         self.file.write(specialSeq.value)
 
-
     def visitTerminalStringSQuote(self,terminalStringSQuote):
         self.file.write(" "+terminalStringSQuote.value+" ")
-
 
     def visitTerminalStringDQuote(self,terminalStringDQuote):
         self.file.write(" "+terminalStringDQuote.value+" ")
 
-
     def visitIdentifier(self,identifier):
         self.file.write(" "+identifier.value+" ")
-
 
     def visitInteger(self,integer):
         self.file.write(" "+integer.value+" ")

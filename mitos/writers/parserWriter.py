@@ -1,7 +1,15 @@
+# -*- coding: utf-8 -*-
+"""
+Created on Sun Aug 18 20:35:45 2019
+
+@author: Quentin Ducasse & Kevin Bedin
+"""
+
+
 import re
-from visitor import Visitor
-from lexemDictionary import LexemDictionary
-from jinja2 import Environment, FileSystemLoader
+
+from mitos.core    import Visitor
+from mitos.writers import LexemDictionary
 
 class ParserWriter(Visitor):
     '''
@@ -9,13 +17,16 @@ class ParserWriter(Visitor):
     --> inherits from Visitor
     each specific call to the visits calls the jinja rendering
     '''
-    def __init__(self,lexer,name="results/parserWriter/parserWriter_output.py"):
+    TEMPLATES_FOLDER="parserGenerator/templates"
+    RESULTS_FOLDER="results/"
+
+    def __init__(self,lexer,name="parserWriter/parserWriter_output.py"):
         self.lexer=lexer
         self.saving_file=open(name,"w")
-        file_loader = FileSystemLoader('templates/parser')#On se place dans le bon dossier
+        file_loader = FileSystemLoader(self.TEMPLATES_FOLDER) # Getting into the right directory
         self.env = Environment(loader=file_loader,extensions=['jinja2.ext.loopcontrols', 'jinja2.ext.do'])
-        self.template = self.env.get_template('body.py')#On ouvre le template
-        self.output = self.template.render()#On remplace les champs du template
+        self.template = self.env.get_template('parser.j2') # Opening the body template
+        self.output = self.template.render() # Replacing the template's fields
         self.saving_file.write(self.output)
         self.to_generate=[]
         self.first=None
@@ -24,25 +35,25 @@ class ParserWriter(Visitor):
         # Visits grammar
         syntax = grammar.syntax
         syntax.accept(self,syntax)
-        #Template for parseMethod()
-        self.template = self.env.get_template('parseMethod.py')
+        # Template for the main parse() method
+        self.template = self.env.get_template('parseMain.j2')
         self.output=self.template.render(main=self.first)
         self.saving_file.write(self.output)
 
     def visitSyntaxRule(self,syntaxRule):
         # Visits identifier
-        id   = syntaxRule.identifier
+        id = syntaxRule.identifier
         # Visits all definitions
         defs = syntaxRule.definitions
         id.accept(self,id)
         defs.accept(self,defs)
-        #Template for parseMethod()
-        self.template = self.env.get_template('method.py')
+        # Template for the different parse<element>() methods
+        self.template = self.env.get_template('parseElement.j2')
         self.output=self.template.render(name=id.value.capitalize(),generator=self.to_generate[1::],n=len(self.to_generate[1::]))
         self.saving_file.write(self.output)
         #Template for testMethod()
-        to_test=[]#To generate the list of char
-        to_call=[]#To generate the calling of the others testMethod()
+        to_test=[] # To generate the list of char
+        to_call=[] # To generate the calling of the others testMethod()
         flag=0
         flag1=True
         #if self.to_generate[1]=="opt-begin" or self.to_generate[1]=="or-begin":#While it's an optionnal seq or a OR seq we add it into the two previous list.
@@ -66,7 +77,7 @@ class ParserWriter(Visitor):
                 flag+=-1
 
 
-        self.template = self.env.get_template('testmethod.py')
+        self.template = self.env.get_template('testMethod.j2')
         self.output=self.template.render(name=id.value.capitalize(),string_list=to_test,dependance_list=to_call)
         self.saving_file.write(self.output)
         self.to_generate=[]

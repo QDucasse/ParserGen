@@ -1,0 +1,13 @@
+    def parse(self, lexems, remove_comments_whitespace=False):
+        '''
+        Main function: launches the parsing operation
+        ---
+        Args:
+        Returns
+        '''
+        self.lexems = lexems
+        if remove_comments_whitespace:
+            self.lexems = self.remove_comments_whitespace()
+        else:
+            self.lexems = self.remove_comments()
+        self.parse{{main}}()

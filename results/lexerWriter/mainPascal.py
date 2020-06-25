@@ -14,8 +14,8 @@ if __name__ == '__main__':
       sys.exit()
 
     lexer = LexerTemplate()
-    tokens = lexer.lex(testFileData)
-    print(tokens)
+    lexems = lexer.lex(testFileData)
+    print(lexems)
     # verbose = False
     # parser = Parser(verbose)
-    # grammar = parser.parse(tokens)
+    # grammar = parser.parse(lexems)

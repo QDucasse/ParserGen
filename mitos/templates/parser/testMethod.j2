@@ -1,6 +1,6 @@
 {# Template to generate a test method of the Parser class #}
     def test{{name}}(self):
-        next=self.show_next().kind
+        next=self.show_next().tag
         testing_list={{string_list}}
         test=(next in testing_list)
         if (test): return(test)

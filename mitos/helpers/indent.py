@@ -17,6 +17,7 @@ class Indent:
         self.indentation = None
 
     def indent(self, text):
+
         if self.indentation is None:
             self.indentation = -self.INDENT
         self.indentation += self.INDENT

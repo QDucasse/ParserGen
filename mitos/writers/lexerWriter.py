@@ -1,7 +1,16 @@
+# -*- coding: utf-8 -*-
+"""
+Created on Sun Aug 18 20:35:45 2019
+
+@author: Quentin Ducasse & Kevin Bedin
+"""
+
+
 import re
-from visitor import Visitor
-from lexemDictionary_v2 import LexemDictionary
 from jinja2 import Environment, FileSystemLoader
+
+from parserGenerator.core    import Visitor
+from parserGenerator.writers import LexemDictionary
 
 class LexerWriter(Visitor):
     '''
@@ -12,6 +21,8 @@ class LexerWriter(Visitor):
     - Terminal string with double quotes
     as they are the lexems of the parsed grammar
     '''
+    TEMPLATES_FOLDER="parserGenerator/templates"
+
     def __init__(self,name="results/lexerWriter/lexerWriter_output.py"):
         self.lexemDictionary = LexemDictionary()
         self.lexemList = [(r'[\n]+', "None")]
@@ -21,14 +32,13 @@ class LexerWriter(Visitor):
         '''
         Writing lexems inside of the Jinja template
         '''
-        file_loader = FileSystemLoader('templates')#On se place dans le bon dossier
+        file_loader = FileSystemLoader(self.TEMPLATES_FOLDER) # Getting into the correct
         env = Environment(loader=file_loader)
-        template = env.get_template('LexerTemplate_jinja.py')#On ouvre le template
+        template = env.get_template('lexerTemplate.j2') # Opening the template
         lex=""
         for lexem in self.lexemList[0:-1]:
             lex+='(r\''+lexem[0]+'\','+lexem[1]+'),\n\t\t'
         lex+='(r\''+lexemList[-1][0]+'\','+lexemList[-1][1]+')'
-        print(lex)
         output = template.render(lexer=lex)#On remplace les champs du template
         f=open(self.name,'w')#On écrit le résultat
         f.write(output)

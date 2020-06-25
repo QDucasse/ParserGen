@@ -13,10 +13,10 @@ if __name__ == '__main__':
       sys.exit()
 
     lexer = Lexer()
-    tokens = lexer.lex(testFileData)
-    print(tokens)
+    lexems = lexer.lex(testFileData)
+    print(lexems)
     verbose = True
     parser = Parser(verbose)
-    parser.parse(tokens,True)
+    parser.parse(lexems,True)
 
 

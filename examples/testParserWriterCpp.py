@@ -20,11 +20,11 @@ if __name__ == '__main__':
       sys.exit()
 
     lexer = Lexer()
-    tokens = lexer.lex(testFileData)
+    lexems = lexer.lex(testFileData)
 
     verbose = True
     parser = Parser(verbose)
-    grammar = parser.parse(tokens)
+    grammar = parser.parse(lexems)
 
     writer = LexerWriter("results/C_pp/MiniCppLexer.py")
     writer.visit(grammar)

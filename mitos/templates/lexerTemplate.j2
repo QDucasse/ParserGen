@@ -1,48 +1,44 @@
 import sys
 import re
 
-class Token:
+class Lexem:
 
-    def __init__(self, kind, value, position):
-        self.kind = kind
-        self.value = value
+    def __init__(self, tag, value, position):
+        self.tag      = tag
+        self.value    = value
         self.position = position
 
     def __repr__(self):
-        return self.kind
+        return self.tag
 
 class Lexer:
 
     regexExpressions = [{{lexer}}]
 
     def __init__(self):
-        self.tokens = []
-
+        self.lexems = []
 
     def lex(self, inputText):
-        lineNumber = 0
-        for line in inputText:
+        for lineNumber, line in enumerate(inputText):
             lineNumber += 1
             position = 0
-            # print(line)
             while position < len(line):
                 match = None
-                for tokenRegex in self.regexExpressions:
-                    pattern, tag = tokenRegex
+                for lexemRegex in self.regexExpressions:
+                    pattern, tag = lexemRegex
                     regex = re.compile(pattern)
                     match = regex.match(line, position)
                     if match:
                         data = match.group(0)
                         if tag:
-                            token = Token(tag, data, [lineNumber, position])
-                            self.tokens.append(token)
+                            lexem = Lexem(tag, data, [lineNumber, position])
+                            self.lexems.append(lexem)
+                        position = match.end(0)
                         break
                 if not match:
                     print(line[position])
                     print("No match")
                     sys.exit(1)
-                else:
-                    position = match.end(0)
-        print("Lexer: analysis successful!")
-        return self.tokens
 
+        print("Lexer: analysis successful!")
+        return self.lexems

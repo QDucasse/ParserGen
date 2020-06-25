@@ -1,6 +1,13 @@
+# -*- coding: utf-8 -*-
+"""
+Created on Sun Aug 18 20:35:45 2019
+
+@author: Quentin Ducasse & Kevin Bedin
+"""
+
+
 import re
 import sys
-
 
 class LexemDictionary():
     '''
@@ -52,11 +59,6 @@ class LexemDictionary():
         (r'\/',   '/'),
         (r'\'',   "'"),
         (r'\"',   '"')
-        # Identifiant, chaines de
-        # (r'\d+\.\d+',    'FLOAT_LIT'),
-        # (r'\d+',         'INTEGER_LIT'),
-        # (r'\"[^\"]*\"',  'STRING_LIT'),
-        # (r'\'[^\"]*\'',  'CHAR_LIT')
     ]
 
     def associateExpression(self,expression):

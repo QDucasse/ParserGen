@@ -1,8 +1,14 @@
+# -*- coding: utf-8 -*-
+"""
+Created on Sun Aug 18 20:35:45 2019
+
+@author: Quentin Ducasse & Kevin Bedin
+"""
+
+
 import sys
 import argparse
-from lexer import Lexer
-from parser import Parser
-
+from mitos.core import Lexer, Parser
 
 if __name__ == '__main__':
 
@@ -21,11 +27,9 @@ if __name__ == '__main__':
       sys.exit()
 
     lexer = Lexer()
-    tokens = lexer.lex(testFileData)
+    lexems = lexer.lex(testFileData)
 
     verbose = True
     parser = Parser(verbose)
-    grammar = parser.parse(tokens)
+    grammar = parser.parse(lexems)
     print(grammar)
-
-    

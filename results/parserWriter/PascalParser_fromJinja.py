@@ -16,7 +16,7 @@ class Parser:
         Returns: None
         '''
         self.indentator = Indent(verbose)
-        self.tokens = []
+        self.lexems = []
         self.errors = 0
 
     def show_next(self, n=1):
@@ -24,39 +24,39 @@ class Parser:
         Returns the next token in the list while not poping it output
         ---
         Args   : int n (optional) the index of the targetted token
-        Returns: token with index n from the tokens list
+        Returns: token with index n from the lexems list
         '''
         try:
-            return self.tokens[n - 1]
+            return self.lexems[n - 1]
         except IndexError:
-            print('ERROR: no more tokens left!')
+            print('ERROR: no more lexems left!')
             sys.exit(1)
 
-    def expect(self, kind):
+    def expect(self, tag):
         '''
-        Pops the next token from the tokens list and tests its type
+        Pops the next token from the lexems list and tests its type
         ---
-        Args   : string kind, the wanted kind
+        Args   : string tag, the wanted tag
         Returns: next token from the list
         '''
-        actualToken = self.show_next()
-        actualKind = actualToken.kind
-        actualPosition = actualToken.position
-        if actualKind == kind:
+        actualLexem = self.show_next()
+        actualtag = actualLexem.tag
+        actualPosition = actualLexem.position
+        if actualtag == tag:
             return self.accept_it()
         else:
-            print('Error at {}: expected {}, got {} instead'.format(str(actualPosition), kind, actualKind))
+            print('Error at {}: expected {}, got {} instead'.format(str(actualPosition), tag, actualtag))
             sys.exit(1)
 
-    # same as expect() but no error if not correct kind
-    def maybe(self, kind):
+    # same as expect() but no error if not correct tag
+    def maybe(self, tag):
         '''
-        Pops the next token from the tokens list without raising error on its type
+        Pops the next token from the lexems list without raising error on its type
         ---
-        Args   : string kind, the wanted kind
+        Args   : string tag, the wanted tag
         Returns: next token from the list
         '''
-        if self.show_next().kind == kind:
+        if self.show_next().tag == tag:
             return self.accept_it()
 
     def accept_it(self):
@@ -66,7 +66,7 @@ class Parser:
         token = self.show_next()
         output = token.value + Colors.ENDC
         self.indentator.say(output)
-        return self.tokens.pop(0)
+        return self.lexems.pop(0)
 
     def remove_comments(self):
         '''
@@ -76,8 +76,8 @@ class Parser:
         Return : None
         '''
         result = []
-        for token in self.tokens:
-            if token.kind == 'COMMENT':
+        for token in self.lexems:
+            if token.tag == 'COMMENT':
                 pass
             else:
                 result.append(token)
@@ -104,7 +104,7 @@ class Parser:
 
 
     def testProgram(self):
-        next=self.show_next().kind
+        next=self.show_next().tag
         testing_list=['PROGRAM']
         test=(next in testing_list)
         return(test)
@@ -125,7 +125,7 @@ class Parser:
 
 
     def testIdentifier(self):
-        next=self.show_next().kind
+        next=self.show_next().tag
         testing_list=[]
         test=(next in testing_list)
         test=(test or self.testAlphabeticcharacter())
@@ -134,7 +134,7 @@ class Parser:
 
     def parseNumber(self):
         self.indentator.indent('Parsing Number')
-        if(self.show_next().kind == "-"):
+        if(self.show_next().tag == "-"):
             self.expect("-")
             
             
@@ -148,7 +148,7 @@ class Parser:
 
 
     def testNumber(self):
-        next=self.show_next().kind
+        next=self.show_next().tag
         testing_list=['-']
         test=(next in testing_list)
         test=(test or self.testDigit())
@@ -168,7 +168,7 @@ class Parser:
 
 
     def testString(self):
-        next=self.show_next().kind
+        next=self.show_next().tag
         testing_list=['"']
         test=(next in testing_list)
         return(test)
@@ -190,7 +190,7 @@ class Parser:
 
 
     def testAssignment(self):
-        next=self.show_next().kind
+        next=self.show_next().tag
         testing_list=[]
         test=(next in testing_list)
         test=(test or self.testIdentifier())
@@ -199,64 +199,64 @@ class Parser:
 
     def parseAlphabeticcharacter(self):
         self.indentator.indent('Parsing Alphabeticcharacter')
-        if(self.show_next().kind == "A"):
+        if(self.show_next().tag == "A"):
             self.expect("A")
-        elif(self.show_next().kind == "B"):
+        elif(self.show_next().tag == "B"):
             self.expect("B")
-        elif(self.show_next().kind == "C"):
+        elif(self.show_next().tag == "C"):
             self.expect("C")
-        elif(self.show_next().kind == "D"):
+        elif(self.show_next().tag == "D"):
             self.expect("D")
-        elif(self.show_next().kind == "E"):
+        elif(self.show_next().tag == "E"):
             self.expect("E")
-        elif(self.show_next().kind == "F"):
+        elif(self.show_next().tag == "F"):
             self.expect("F")
-        elif(self.show_next().kind == "G"):
+        elif(self.show_next().tag == "G"):
             self.expect("G")
-        elif(self.show_next().kind == "H"):
+        elif(self.show_next().tag == "H"):
             self.expect("H")
-        elif(self.show_next().kind == "I"):
+        elif(self.show_next().tag == "I"):
             self.expect("I")
-        elif(self.show_next().kind == "J"):
+        elif(self.show_next().tag == "J"):
             self.expect("J")
-        elif(self.show_next().kind == "K"):
+        elif(self.show_next().tag == "K"):
             self.expect("K")
-        elif(self.show_next().kind == "L"):
+        elif(self.show_next().tag == "L"):
             self.expect("L")
-        elif(self.show_next().kind == "M"):
+        elif(self.show_next().tag == "M"):
             self.expect("M")
-        elif(self.show_next().kind == "N"):
+        elif(self.show_next().tag == "N"):
             self.expect("N")
-        elif(self.show_next().kind == "O"):
+        elif(self.show_next().tag == "O"):
             self.expect("O")
-        elif(self.show_next().kind == "P"):
+        elif(self.show_next().tag == "P"):
             self.expect("P")
-        elif(self.show_next().kind == "Q"):
+        elif(self.show_next().tag == "Q"):
             self.expect("Q")
-        elif(self.show_next().kind == "R"):
+        elif(self.show_next().tag == "R"):
             self.expect("R")
-        elif(self.show_next().kind == "S"):
+        elif(self.show_next().tag == "S"):
             self.expect("S")
-        elif(self.show_next().kind == "T"):
+        elif(self.show_next().tag == "T"):
             self.expect("T")
-        elif(self.show_next().kind == "U"):
+        elif(self.show_next().tag == "U"):
             self.expect("U")
-        elif(self.show_next().kind == "V"):
+        elif(self.show_next().tag == "V"):
             self.expect("V")
-        elif(self.show_next().kind == "W"):
+        elif(self.show_next().tag == "W"):
             self.expect("W")
-        elif(self.show_next().kind == "X"):
+        elif(self.show_next().tag == "X"):
             self.expect("X")
-        elif(self.show_next().kind == "Y"):
+        elif(self.show_next().tag == "Y"):
             self.expect("Y")
-        elif(self.show_next().kind == "Z"):
+        elif(self.show_next().tag == "Z"):
             self.expect("Z")
         
         self.indentator.dedent()
 
 
     def testAlphabeticcharacter(self):
-        next=self.show_next().kind
+        next=self.show_next().tag
         testing_list=['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z']
         test=(next in testing_list)
         return(test)
@@ -264,32 +264,32 @@ class Parser:
 
     def parseDigit(self):
         self.indentator.indent('Parsing Digit')
-        if(self.show_next().kind == "0"):
+        if(self.show_next().tag == "0"):
             self.expect("0")
-        elif(self.show_next().kind == "1"):
+        elif(self.show_next().tag == "1"):
             self.expect("1")
-        elif(self.show_next().kind == "2"):
+        elif(self.show_next().tag == "2"):
             self.expect("2")
-        elif(self.show_next().kind == "3"):
+        elif(self.show_next().tag == "3"):
             self.expect("3")
-        elif(self.show_next().kind == "4"):
+        elif(self.show_next().tag == "4"):
             self.expect("4")
-        elif(self.show_next().kind == "5"):
+        elif(self.show_next().tag == "5"):
             self.expect("5")
-        elif(self.show_next().kind == "6"):
+        elif(self.show_next().tag == "6"):
             self.expect("6")
-        elif(self.show_next().kind == "7"):
+        elif(self.show_next().tag == "7"):
             self.expect("7")
-        elif(self.show_next().kind == "8"):
+        elif(self.show_next().tag == "8"):
             self.expect("8")
-        elif(self.show_next().kind == "9"):
+        elif(self.show_next().tag == "9"):
             self.expect("9")
         
         self.indentator.dedent()
 
 
     def testDigit(self):
-        next=self.show_next().kind
+        next=self.show_next().tag
         testing_list=['0', '1', '2', '3', '4', '5', '6', '7', '8', '9']
         test=(next in testing_list)
         return(test)
@@ -303,7 +303,7 @@ class Parser:
 
 
     def testWhitespace(self):
-        next=self.show_next().kind
+        next=self.show_next().tag
         testing_list=[' ']
         test=(next in testing_list)
         return(test)
@@ -311,7 +311,7 @@ class Parser:
 
     def parseAllcharacters(self):
         self.indentator.indent('Parsing Allcharacters')
-        if(self.show_next().kind == "[a-zA-Z0-9 \W]"):
+        if(self.show_next().tag == "[a-zA-Z0-9 \W]"):
             self.expect("[a-zA-Z0-9 \W]")
         elif(self.testAlphabeticcharacter()):
             self.parseAlphabeticcharacter()
@@ -322,21 +322,21 @@ class Parser:
 
 
     def testAllcharacters(self):
-        next=self.show_next().kind
+        next=self.show_next().tag
         testing_list=['[a-zA-Z0-9 \\W]']
         test=(next in testing_list)
         test=(test or self.testAlphabeticcharacter())
         test=(test or self.testWhitespace())
         return(test)
 
-    def parse(self, tokens):
+    def parse(self, lexems):
         '''
         Main function: launches the parsing operation
         ---
         Args:
         Returns
         '''
-        self.tokens = tokens
-        #print(self.tokens)
-        self.tokens = self.remove_comments()
+        self.lexems = lexems
+        #print(self.lexems)
+        self.lexems = self.remove_comments()
         self.parseProgram()

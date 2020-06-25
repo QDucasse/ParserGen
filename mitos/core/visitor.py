@@ -16,34 +16,38 @@ class Visitor:
         grammar.accept(self,grammar)
 
     def visitGrammar(self,grammar):
-        # Visits grammar
+        '''Visits grammar'''
+        # Visit the syntax element
         syntax = grammar.syntax
         syntax.accept(self,syntax)
 
     def visitSyntax(self,syntax):
-        # Visits all syntax rules
+        '''Visits all syntax rules'''
         for syntaxRule in syntax.syntaxRules:
             syntaxRule.accept(self,syntaxRule)
 
     def visitSyntaxRule(self,syntaxRule):
-        # Visits identifier
+        '''Visits one syntax rule'''
+        # Visit identifier
         id   = syntaxRule.identifier
-        # Visits all definitions
+        # Visit all the definitions
         defs = syntaxRule.definitions
         id.accept(self,id)
         defs.accept(self,defs)
 
     def visitDefinitions(self,definitions):
-        # Visits all definitions
+        '''Visits all definitions'''
         for definition in definitions.definitions:
             definition.accept(self,definition)
 
     def visitDefinition(self,definition):
+        '''Visit a definition'''
         # Visits all terms
         for term in definition.terms:
             term.accept(self,term)
 
     def visitTerm(self,term):
+        '''Visit a term'''
         # Visits the factor
         term.factor.accept(self,term.factor)
         # Visits the exception
@@ -52,14 +56,16 @@ class Visitor:
             term.exception.accept(self,term.exception)
 
     def visitException(self,exception):
-        # Visits the exception
+        '''Visit the exception'''
         exception.factor.accept(self,exception.factor)
 
     def visitFactor(self,factor):
+        '''Visit a factor'''
         # Visits the primary
         factor.primary.accept(self,factor.primary)
 
     def visitPrimary(self,primary):
+        '''Visit a primary'''
         if primary.optionalSeq != None:
             primary.optionalSeq.accept(self,primary.optionalSeq)
         elif primary.identifier != None:
@@ -76,12 +82,15 @@ class Visitor:
             primary.empty.accept(self,primary.empty)
 
     def visitOptionalSeq(self,optionalSeq):
+        '''Visit an optional sequence'''
         optionalSeq.definitions.accept(self,optionalSeq.definitions)
 
     def visitRepeatedSeq(self,repeatedSeq):
+        '''Visit a repeated sequence'''
         repeatedSeq.definitions.accept(self,repeatedSeq.definitions)
 
     def visitGroupedSeq(self,groupedSeq):
+        '''Visit a grouped sequence'''
         groupedSeq.definitions.accept(self,groupedSeq.definitions)
 
     def visitSpecialSeq(self,specialSeq):
@@ -98,7 +107,6 @@ class Visitor:
 
     def visitIdentifier(self,identifier):
         pass
-
 
     def visitEmpty(self,empty):
         pass

@@ -2,14 +2,11 @@
 -         : absence
 ,         : concatenation
 =         : definition
-;         : terminaison
+;         : ending
 
-(* ... *) : commentaire  --------- \(\*[^(\*\))]*\*\) 
- ? ... ?  : séquence spéciale ---- \?[^\?)]*\?    
+(* ... *) : comment  ------------ \(\*[^(\*\))]*\*\)
+ ? ... ?  : special sequence ---- \?[^\?)]*\?
 
- [ ... ]  : groupe optionnel
- ( ... )  : groupe
- { ... }  : groupe répété
- 
-
-
+ [ ... ]  : optional group
+ ( ... )  : group
+ { ... }  : repeated group

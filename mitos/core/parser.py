@@ -8,129 +8,160 @@ Created on Sun Aug 18 20:35:45 2019
 
 import sys
 import copy
-from ast    import *
-from indent import Indent
-from colors import Colors
+
+from mitos.core.ast import *
+from mitos.helpers  import Indent, Colors
 
 
 class Parser:
+    '''
+    EBNF main parser class of the system.
 
+    Parameters
+    ----------
+    verbose: boolean
+        Run the parser in verbose mode to obtain outputs in the terminal.
+
+    Note
+    ----
+    The comments display extracts of the EBNF's EBNF grammar and those lines are followed by "//EBNF".
+    You can refer to the full grammar in grammars/ebnf.ebnf
+    '''
     TERMINAL_STRING = [ 'SQUOTE','DQUOTE' ]
 
     def __init__(self, verbose=False):
-        '''
-        Parser constructor
-        ---
-        Args:    boolean verbose
-        Returns: None
-        '''
         self.indentator = Indent(verbose)
-        self.tokens = []
+        self.lexems = []
         self.errors = 0
 
     def show_next(self, n=1):
         '''
-        Returns the next token in the list while not poping it output
-        ---
-        Args   : int n (optional) the index of the targetted token
-        Returns: token with index n from the tokens list
+        Returns the next token in the list while not popping its output.
+
+        Parameters
+        ----------
+        n: integer
+            The index of the targetted token. Default: 1.
+
+        Returns
+        -------
+        lexem: Lexem
+            lexem with index n from the lexems list.
         '''
         try:
-            return self.tokens[n - 1]
+            return self.lexems[n - 1]
         except IndexError:
-            print('ERROR: no more tokens left!')
+            print('ERROR: no more lexems left!')
             sys.exit(1)
 
-    def expect(self, kind):
+    def expect(self, tag):
         '''
-        Pops the next token from the tokens list and tests its type
-        ---
-        Args   : string kind, the wanted kind
-        Returns: next token from the list
+        Pops the next token from the lexems list and tests its type.
+
+        Parameters
+        ----------
+        tag: string
+            The wanted tag.
+
+        Returns
+        -------
+        lexem: Lexem
+            Next lexem from the list.
         '''
-        actualToken = self.show_next()
-        actualKind = actualToken.kind
-        actualPosition = actualToken.position
-        if actualKind == kind:
+        actualLexem = self.show_next()
+        actualTag = actualLexem.tag
+        actualPosition = actualLexem.position
+        if actualtag == tag:
             return self.accept_it()
         else:
-            print('Error at {}: expected {}, got {} instead'.format(str(actualPosition), kind, actualKind))
+            print('Error at {}: expected {}, got {} instead'.format(str(actualPosition), tag, actualtag))
             sys.exit(1)
 
-    # same as expect() but no error if not correct kind
-    def maybe(self, kind):
+    def maybe(self, tag):
         '''
-        Pops the next token from the tokens list without raising error on its type
-        ---
-        Args   : string kind, the wanted kind
-        Returns: next token from the list
+        Pops the next token from the lexems list without raising error on its type.
+
+        Parameters
+        ----------
+        tag: string
+            The wanted tag.
+
+        Returns
+        -------
+        lexem: Lexem
+            Next lexem from the list.
         '''
-        if self.show_next().kind == kind:
+        if self.show_next().tag == tag:
             return self.accept_it()
 
     def accept_it(self):
         '''
+        Pops the lexem out of the lexems list and log its tag/value combination.
 
+        Returns
+        -------
+        lexem: Lexem
+            Popped lexem out of the lexems list.
         '''
-        token = self.show_next()
-        output = Colors.FAIL + str(token.kind) + ' ' + token.value + Colors.ENDC
+        lexem = self.show_next()
+        output = Colors.OKGREEN + str(lexem.tag) + ' ' + lexem.value + Colors.ENDC
         self.indentator.say(output)
-        return self.tokens.pop(0)
+        return self.lexems.pop(0)
 
     def remove_comments(self):
         '''
-        Removes the comments from the token list
-        ---
-        Args:    None
-        Return : None
+        Removes the comments from the token list by testing their tags.
         '''
-        result = []
-        for token in self.tokens:
-            if token.kind == 'COMMENT':
-                pass
-            else:
-                result.append(token)
-        return result
+        self.lexems = [lexem for lexem in self.lexems if lexem.tag!="COMMENT"]
 
-    def parse(self, tokens):
+    def parse(self, lexems):
         '''
-        Main function: launches the parsing operation
-        ---
-        Args:
+        Main function: launches the parsing operation.
+
+        Parameters
+        ----------
+        lexems: Lexem list
+            List of the lexems the parser will need to be run on.
+
         Returns
+        -------
+        grammar: Grammar
+            Grammar node, root of the AST.
         '''
-        self.tokens = tokens
-        #print(self.tokens)
-        self.tokens = self.remove_comments()
+        self.lexems = lexems
+        self.remove_comments()
         grammar = self.parseGrammar()
         return grammar
 
     def parseGrammar(self):
         '''
-        Root of the program, beginning of the parsing
+        Root of the program, beginning of the parsing by the input file: EBNF grammar.
         '''
-        self.indentator.indent('Parsing Grammar')
+        # Parsing the Grammar...
+        self.indentator.indent('Parsing Grammar...')
         grammar = Grammar()
         syntax  = self.parseSyntax()
         grammar.syntax = syntax
         self.indentator.dedent()
+        # Result display
         if (self.errors == 1):
             print('WARNING: 1 error found!')
         elif (self.errors > 1):
             print('WARNING: ' + str(self.errors) + ' errors found!')
         else:
-            print('parser: syntax analysis successful!')
+            print('Parser: syntax analysis successful!')
         return grammar
 
     def parseSyntax(self):
         '''
         Parses a syntax:
-        Syntax = SyntaxRule, {SyntaxRule};
+        Syntax = SyntaxRule, {SyntaxRule}; //EBNF
         '''
-        self.indentator.indent('Parsing Syntax')
+        self.indentator.indent('Parsing Syntax...')
         self.indentator.say(Colors.OKGREEN + 'New Syntax' +  Colors.ENDC)
         syntax = Syntax()
-        while (len(self.tokens)>0):
+        # A "syntax" can hold multiple "syntax rules", as stated by the EBNF
+        while (len(self.lexems)>0):
             syntaxRule = self.parseSyntaxRule()
             syntax.addRule(syntaxRule)
         self.indentator.say(Colors.OKGREEN + 'End Syntax' +  Colors.ENDC + str(syntax.syntaxRules))
@@ -142,7 +173,7 @@ class Parser:
         Parses a syntax rule:
         SyntaxRule = Identifier, '=', Definitions, ';';  //EBNF
         '''
-        self.indentator.indent('Parsing Syntax Rule')
+        self.indentator.indent('Parsing Syntax Rule...')
         self.indentator.say(Colors.OKGREEN + 'New Syntax Rule' +  Colors.ENDC)
         syntaxRule = SyntaxRule()
         identifier  = self.parseIdentifier()
@@ -160,13 +191,14 @@ class Parser:
         Parses definitions:
         Definitions = Definition, {'|', Definition};  //EBNF
         '''
-        self.indentator.indent('Parsing Definitions')
+        self.indentator.indent('Parsing Definitions...')
         self.indentator.say(Colors.OKGREEN + 'New Definitions' +  Colors.ENDC)
         definitionsToCopy = Definitions()
         definitions = copy.deepcopy(definitionsToCopy)
         mainDefinition = self.parseDefinition()
         definitions.addDefinition(mainDefinition)
-        while(self.show_next().kind == 'SEPARATOR'):
+        # A "definitions" can hold multiple "definition", as stated by the EBNF
+        while(self.show_next().tag == 'SEPARATOR'):
             self.expect('SEPARATOR')
             otherDefinition = self.parseDefinition()
             definitions.addDefinition(otherDefinition)
@@ -179,12 +211,13 @@ class Parser:
         Parses a definition:
         Definition = Term, {',', Term};  //EBNF
         '''
-        self.indentator.indent('Parsing Definition')
+        self.indentator.indent('Parsing Definition...')
         self.indentator.say(Colors.OKGREEN + 'New Definition' +  Colors.ENDC)
         definition = Definition()
         mainTerm = self.parseTerm()
         definition.addTerm(mainTerm)
-        while(self.show_next().kind == 'CONCATENATION'):
+        # A "definition" can hold multiple "terms", as stated by the EBNF
+        while(self.show_next().tag == 'CONCATENATION'):
             self.expect('CONCATENATION')
             otherTerm=self.parseTerm()
             definition.addTerm(otherTerm)
@@ -197,13 +230,13 @@ class Parser:
         Parses a term:
         Term = Factor, ['-', Exception];  //EBNF
         '''
-        self.indentator.indent('Parsing Term')
+        self.indentator.indent('Parsing Term...')
         self.indentator.say(Colors.OKGREEN + 'New Term' +  Colors.ENDC)
         term = Term()
         factor    = self.parseFactor()
         term.factor = factor
         exception = None
-        if self.show_next().kind == 'EXCEPT':
+        if self.show_next().tag == 'EXCEPT':
             self.expect('EXCEPT')
             exception = self.parseException()
             term.exception = exception
@@ -235,7 +268,7 @@ class Parser:
         factor = Factor()
         integer = 0
         factor.integer = integer
-        if self.show_next().kind == 'DIGIT':
+        if self.show_next().tag == 'DIGIT':
             integer = self.parseInteger()
             factor.integer = integer
             self.expect('REPETITION')
@@ -256,26 +289,26 @@ class Parser:
                 | Identifier
                 | Empty;            //EBNF
         '''
-
-        self.indentator.indent('Parsing Primary')
+        self.indentator.indent('Parsing Primary...')
         self.indentator.say(Colors.OKGREEN + 'New Primary' +  Colors.ENDC)
         primary = Primary()
-        if self.show_next().kind   == 'LBRACKET':
+        # A primary can consist of different type of objects and is parsed accordingly
+        if self.show_next().tag == 'LBRACKET':
             optionalSeq = self.parseOptionalSeq()
             primary.optionalSeq = optionalSeq
-        elif self.show_next().kind == 'LBRACE':
+        elif self.show_next().tag == 'LBRACE':
             repeatedSeq = self.parseRepeatedSeq()
             primary.repeatedSeq = repeatedSeq
-        elif self.show_next().kind == 'LPAREN':
+        elif self.show_next().tag == 'LPAREN':
             groupedSeq = self.parseGroupedSeq()
             primary.groupedSeq = groupedSeq
-        elif self.show_next().kind == 'SPECIAL':
+        elif self.show_next().tag == 'SPECIAL':
             specialSeq = self.parseSpecialSeq()
             primary.specialSeq = specialSeq
-        elif self.show_next().kind in Parser.TERMINAL_STRING:
+        elif self.show_next().tag in Parser.TERMINAL_STRING:
             terminalString = self.parseTerminalString()
             primary.terminalString = terminalString
-        elif self.show_next().kind == 'IDENTIFIER':
+        elif self.show_next().tag == 'IDENTIFIER':
             identifier = self.parseIdentifier()
             primary.identifier = identifier
         else:
@@ -356,12 +389,12 @@ class Parser:
         '''
         self.indentator.indent('Parsing Terminal String')
         self.indentator.say(Colors.OKGREEN + 'New Terminal String' +  Colors.ENDC)
-        if self.show_next().kind == 'SQUOTE':
+        if self.show_next().tag == 'SQUOTE':
             terminalString = TerminalStringSQuote()
             token = self.expect('SQUOTE')
             value = token.value
             terminalString.value = value
-        elif self.show_next().kind == 'DQUOTE':
+        elif self.show_next().tag == 'DQUOTE':
             terminalString = TerminalStringDQuote()
             token = self.expect('DQUOTE')
             value = token.value

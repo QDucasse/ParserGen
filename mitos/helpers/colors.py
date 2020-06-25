@@ -5,6 +5,7 @@ Created on Sun Aug 18 20:35:45 2019
 @author: Quentin Ducasse & Kevin Bedin
 """
 
+
 class Colors:
     '''
     Classic colors that can be used to display more pleasantly information
