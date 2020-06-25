@@ -9,8 +9,8 @@ Created on Sun Aug 18 20:35:45 2019
 import re
 from jinja2 import Environment, FileSystemLoader
 
-from parserGenerator.core    import Visitor
-from parserGenerator.writers import LexemDictionary
+from mitos.core    import Visitor
+from mitos.writers import LexemDictionary
 
 class LexerWriter(Visitor):
     '''
@@ -21,7 +21,7 @@ class LexerWriter(Visitor):
     - Terminal string with double quotes
     as they are the lexems of the parsed grammar
     '''
-    TEMPLATES_FOLDER="parserGenerator/templates"
+    TEMPLATES_FOLDER="mitos/templates"
 
     def __init__(self,name="results/lexerWriter/lexerWriter_output.py"):
         self.lexemDictionary = LexemDictionary()

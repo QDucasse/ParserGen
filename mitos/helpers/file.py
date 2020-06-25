@@ -6,7 +6,7 @@ Created on Sun Aug 18 20:35:45 2019
 """
 
 
-class File(Object):
+class File(object):
     '''
     File handler managing opening, writing and closing
     '''

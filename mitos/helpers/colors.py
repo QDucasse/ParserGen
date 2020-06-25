@@ -6,7 +6,7 @@ Created on Sun Aug 18 20:35:45 2019
 """
 
 
-class Colors:
+class Colors(object):
     '''
     Classic colors that can be used to display more pleasantly information
     in the terminal

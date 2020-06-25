@@ -10,13 +10,11 @@ from __future__ import absolute_import
 __all__ = ["ast",
            "lexer",
            "parser",
-           "prettyprinter",
-           "lexem",
-           "visitor"]
+           "visitor",
+           "prettyprinter"]
 
 from .ast           import *
 from .lexer         import *
 from .parser        import *
-from .prettyprinter import *
-from .lexem         import *
 from .visitor       import *
+from .prettyprinter import *

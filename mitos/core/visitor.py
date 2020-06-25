@@ -6,7 +6,7 @@ Created on Sun Aug 18 20:35:45 2019
 """
 
 
-class Visitor:
+class Visitor(object):
     '''
     Main visitor class
     Templating the successive accept calls in order to be used by

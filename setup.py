@@ -1,7 +1,7 @@
 from setuptools import setup, find_packages  # Always prefer setuptools over distutils
 from codecs import open  # To use a consistent encoding
 from os import path
-import parserGenerator
+import mitos
 
 here = path.abspath(path.dirname(__file__))
 
@@ -10,18 +10,18 @@ with open(path.join(here, 'README.md'), encoding='utf-8') as f:
     long_description = f.read()
 
 setup(
-    name='ParserGen',
+    name='Mitos',
 
     # Versions should comply with PEP440.  For a discussion on single-sourcing
     # the version across setup.py and the project code, see
     # http://packaging.python.org/en/latest/tutorial.html#version
-    version=nn_benchmark.__version__,
+    version=mitos.__version__,
 
     description='Parser Generator from an input EBNF grammar',
     long_description=long_description,
 
     # The project's main homepage.
-    url='https://github.com/QDucasse/ParserGen',
+    url='https://github.com/QDucasse/mitos',
 
     # Author details
     author='Quentin Ducasse, Kevin Bedin',

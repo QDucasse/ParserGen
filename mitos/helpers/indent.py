@@ -6,7 +6,7 @@ Created on Sun Aug 18 20:35:45 2019
 """
 
 
-class Indent:
+class Indent(object):
     '''
     An indentator simplifying information display with automated tabulations
     '''

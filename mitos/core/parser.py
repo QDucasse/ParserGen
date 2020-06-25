@@ -13,7 +13,7 @@ from mitos.core.ast import *
 from mitos.helpers  import Indent, Colors
 
 
-class Parser:
+class Parser(object):
     '''
     EBNF main parser class of the system.
 

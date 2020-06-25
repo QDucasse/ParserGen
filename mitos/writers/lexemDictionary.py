@@ -9,7 +9,7 @@ Created on Sun Aug 18 20:35:45 2019
 import re
 import sys
 
-class LexemDictionary():
+class LexemDictionary(object):
     '''
     A basic lexem dictionary that will be fed to the lexer writer and
     used as a basis to find already known lexems.

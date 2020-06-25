@@ -5,8 +5,7 @@ from indent import Indent
 from colors import Colors
 
 
-class Parser:
-
+class Parser(object):
 
     def __init__(self, verbose=False):
         '''
@@ -81,4 +80,3 @@ class Parser:
             else:
                 result.append(token)
         return result
-        

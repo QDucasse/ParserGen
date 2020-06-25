@@ -39,7 +39,7 @@ regexExpressions = [
 ]
 
 
-class Lexem(Object):
+class Lexem(object):
     '''
     Our token definition:
     lexem (tag and value) + position in the program raw text

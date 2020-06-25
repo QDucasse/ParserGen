@@ -1,4 +1,4 @@
-# ParserGenerator
+# Mitos: a parser generator
 
 ## Authors:
 - Kévin BEDIN
@@ -18,15 +18,15 @@ As part of our compilation course, we had to put together a `lexer`, `parser`,`a
 
 ## Grammar
 
-The EBNF Grammar we used can be found inside the **ISO-14977** inside the `docs` directory. The grammar itself can be found under `parserGenerator/ebnf_grammar.ebnf`. This grammar will be the one defining how our **EBNF** **parser** & **lexer** work and how the **ast** is structured.
+The EBNF Grammar we used can be found inside the **ISO-14977** inside the `docs` directory. The grammar itself can be found under `grammars/ebnf.ebnf`. This grammar will be the one defining how our **EBNF** **parser** & **lexer** work and how the **ast** is structured.
 
 ## Lexer & Parser Generation
 
-The generation of the parsed grammar lexer and parser is made through Jinja templates that can be found under `parserGenerator/templates` and rendered inside the `parserWriter` and `lexerWriterV2`.
+The generation of the parsed grammar lexer and parser is made through Jinja templates that can be found under `mitos/templates` and rendered inside the `parserWriter` and `lexerWriterV2`.
 
 ## Generator launching
 
-Write the following command while in `parserGenerator` to launch the generator:
+Write the following command while in `mitos` to launch the generator:
 ```
 $ python testFile.py
 ```

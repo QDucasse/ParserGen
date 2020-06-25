@@ -17,7 +17,7 @@ class ParserWriter(Visitor):
     --> inherits from Visitor
     each specific call to the visits calls the jinja rendering
     '''
-    TEMPLATES_FOLDER="parserGenerator/templates"
+    TEMPLATES_FOLDER="mitos/templates"
     RESULTS_FOLDER="results/"
 
     def __init__(self,lexer,name="parserWriter/parserWriter_output.py"):
