@@ -77,23 +77,6 @@ class Parser(object):
             print('Error at {}: expected {}, got {} instead'.format(str(actualPosition), tag, actualTag))
             sys.exit(1)
 
-    def maybe(self, tag):
-        '''
-        Pops the next token from the lexems list without raising error on its type.
-
-        Parameters
-        ----------
-        tag: string
-            The wanted tag.
-
-        Returns
-        -------
-        lexem: Lexem
-            Next lexem from the list.
-        '''
-        if self.show_next().tag == tag:
-            return self.accept_it()
-
     def accept_it(self):
         '''
         Pops the lexem out of the lexems list and log its tag/value combination.

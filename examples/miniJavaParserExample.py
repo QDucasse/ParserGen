@@ -31,11 +31,11 @@ if __name__ == '__main__':
     parser = Parser(verbose)
     grammar = parser.parse(lexems)
 
-    writer = LexerWriter("results/miniJava/MiniJavaLexer.py")
+    writer = LexerWriter("results/miniJava/miniJavaLexer.py")
     writer.visit(grammar)
     writer.write(writer.lexemList)
 
-    writerParser = ParserWriter(writer.lexemList,"results/miniJava/MiniJavaParser.py")
+    writerParser = ParserWriter(writer.lexemList,"results/miniJava/miniJavaParser.py")
     writerParser.visit(grammar)
 
     pp = PrettyPrinter("results/miniJava/mini_java_grammar_pp.ebnf")
